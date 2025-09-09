@@ -12,5 +12,5 @@ config_version=5
 
 config/name="Re:NES Flops"
 run/main_scene="uid://dfhauiieegxvh"
-config/features=PackedStringArray("4.4", "Forward Plus")
+config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
