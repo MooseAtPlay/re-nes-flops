@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://cgnxvjsdkvjah"]
+
+[ext_resource type="Texture2D" uid="uid://dtv21jr6cwg3f" path="res://adv_rocky_bullwinkle/assets/bullwinkle_default.png" id="1_cbnt7"]
+[ext_resource type="Script" uid="uid://065md10dby2v" path="res://adv_rocky_bullwinkle/bullwinkle.gd" id="1_q6axh"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cbnt7"]
+radius = 6.0
+height = 46.0
+
+[node name="Bullwinkle" type="CharacterBody2D"]
+script = ExtResource("1_q6axh")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_cbnt7")
+hframes = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_cbnt7")
