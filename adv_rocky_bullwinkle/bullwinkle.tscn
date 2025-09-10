@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://cgnxvjsdkvjah"]
+[gd_scene load_steps=17 format=3 uid="uid://cgnxvjsdkvjah"]
 
 [ext_resource type="Script" uid="uid://065md10dby2v" path="res://adv_rocky_bullwinkle/bullwinkle.gd" id="1_q6axh"]
 [ext_resource type="Texture2D" uid="uid://jluonenj0b4d" path="res://adv_rocky_bullwinkle/assets/bullwinkle_run.png" id="3_iopbq"]
@@ -43,6 +43,10 @@ region = Rect2(144, 0, 36, 48)
 [sub_resource type="AtlasTexture" id="AtlasTexture_cston"]
 atlas = ExtResource("3_iopbq")
 region = Rect2(180, 0, 36, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mtfkq"]
+atlas = ExtResource("3_iopbq")
+region = Rect2(216, 0, 36, 48)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_jgwg0"]
 animations = [{
@@ -105,6 +109,14 @@ animations = [{
 "loop": true,
 "name": &"run",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mtfkq")
+}],
+"loop": true,
+"name": &"skid",
+"speed": 5.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cbnt7"]
@@ -116,7 +128,7 @@ script = ExtResource("1_q6axh")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_jgwg0")
-animation = &"idle"
+animation = &"skid"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
