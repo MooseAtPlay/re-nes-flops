@@ -121,8 +121,8 @@ func _respawn_player() -> void:
 func update_ui() -> void:
 	# Update UI labels
 	health_label.text = "Health: " + str(health) + "/" + str(max_health)
-	bombs_label.text = "Bombs: " + str(bombs)
-	lives_label.text = "Lives: " + str(lives)
+	bombs_label.text = str(bombs)
+	lives_label.text = str(lives)
 	score_label.text = "Score: " + str(score)
 
 # Input handling

@@ -1,10 +1,13 @@
-[gd_scene load_steps=6 format=4 uid="uid://nrvqjkb1t7cs"]
+[gd_scene load_steps=9 format=4 uid="uid://nrvqjkb1t7cs"]
 
 [ext_resource type="Script" uid="uid://bsel00rsfound" path="res://adv_rocky_bullwinkle/adv_rocky_bullwinkle.gd" id="1_cnuhv"]
 [ext_resource type="PackedScene" uid="uid://cgnxvjsdkvjah" path="res://adv_rocky_bullwinkle/bullwinkle.tscn" id="1_fsveu"]
 [ext_resource type="TileSet" uid="uid://cyrdmeppayrwv" path="res://adv_rocky_bullwinkle/assets/ss001_tile_set.tres" id="2_4xyst"]
 [ext_resource type="TileSet" uid="uid://jx67v2sq1r63" path="res://adv_rocky_bullwinkle/assets/ss002_tile_set.tres" id="2_oa7qo"]
 [ext_resource type="PackedScene" uid="uid://bdutr45f50vaj" path="res://adv_rocky_bullwinkle/bomb.tscn" id="4_t2io7"]
+[ext_resource type="Texture2D" uid="uid://db1kai0036bev" path="res://adv_rocky_bullwinkle/assets/bomb_icon.png" id="6_28dud"]
+[ext_resource type="Theme" uid="uid://pi8xc32lblwd" path="res://adv_rocky_bullwinkle/ui_theme.tres" id="6_tywak"]
+[ext_resource type="Texture2D" uid="uid://djbpahuwrxw68" path="res://adv_rocky_bullwinkle/assets/heart_icon.png" id="7_u1cvl"]
 
 [node name="AdvRockyBullwinkle" type="Node2D"]
 script = ExtResource("1_cnuhv")
@@ -17,6 +20,9 @@ tile_set = ExtResource("2_4xyst")
 tile_map_data = PackedByteArray("AAAtAAkAAAAAAAkAAAAtAAoAAAAAAAoAAAAtAAsAAAAAAAsAAAAuAAkAAAABAAkAAAAuAAoAAAABAAoAAAAuAAsAAAABAAsAAAAvAAkAAAACAAkAAAAvAAoAAAACAAoAAAAvAAsAAAACAAsAAAAvAAwAAAACAAwAAAAwAAkAAAADAAkAAAAwAAoAAAADAAoAAAAwAAsAAAADAAsAAAAwAAwAAAADAAwAAAAxAAkAAAAEAAkAAAAxAAoAAAAEAAoAAAAxAAsAAAAEAAsAAAAxAAwAAAAEAAwAAAAyAAkAAAAFAAkAAAAyAAoAAAAFAAoAAAAyAAsAAAAFAAsAAAAyAAwAAAAFAAwAAAAzAAkAAAAGAAkAAAAzAAoAAAAGAAoAAAAzAAsAAAAGAAsAAAAzAAwAAAAGAAwAAAA0AAkAAAAHAAkAAAA0AAoAAAAHAAoAAAA0AAsAAAAHAAsAAAA0AAwAAAAHAAwAAAA1AAkAAAAIAAkAAAA1AAoAAAAIAAoAAAA1AAsAAAAIAAsAAAA1AAwAAAAIAAwAAAA1AA0AAAAIAA0AAAA2AAkAAAAJAAkAAAA2AAoAAAAJAAoAAAA2AAsAAAAJAAsAAAA2AAwAAAAJAAwAAAA3AAkAAAAKAAkAAAA3AAoAAAAKAAoAAAA3AAsAAAAKAAsAAAA4AAkAAAALAAkAAAA4AAoAAAALAAoAAAA4AAsAAAALAAsAAAA5AAkAAAAMAAkAAAA5AAoAAAAMAAoAAAA6AAkAAAAAAAoAAAA6AAoAAAAAAAsAAAA6AAgAAAAAAAkAAAA7AAgAAAABAAkAAAA7AAkAAAABAAoAAAA7AAoAAAABAAsAAAA8AAgAAAACAAkAAAA8AAkAAAACAAoAAAA8AAoAAAACAAsAAAA8AAsAAAACAAwAAAA9AAgAAAADAAkAAAA9AAkAAAADAAoAAAA9AAoAAAADAAsAAAA+AAgAAAAEAAkAAAA+AAkAAAAEAAoAAAA/AAgAAAAFAAkAAAA/AAkAAAAFAAoAAABAAAgAAAAGAAkAAABAAAkAAAAGAAoAAABAAAoAAAAGAAsAAABBAAgAAAAHAAkAAABBAAkAAAAHAAoAAABBAAoAAAAHAAsAAABBAAsAAAAHAAwAAABBAAwAAAAHAA0AAABCAAgAAAAIAAkAAABCAAkAAAAIAAoAAABCAAoAAAAIAAsAAABCAAsAAAAIAAwAAABCAAwAAAAIAA0AAABDAAgAAAAJAAkAAABDAAkAAAAJAAoAAABDAAoAAAAJAAsAAABDAAsAAAAJAAwAAABEAAgAAAAKAAkAAABEAAkAAAAKAAoAAABEAAoAAAAKAAsAAABFAAgAAAALAAkAAABFAAkAAAALAAoAAABFAAoAAAALAAsAAABGAAgAAAAMAAkAAABGAAkAAAAMAAoAAABHAAgAAAANAAkAAABHAAkAAAANAAoAAABIAAoAAAAYAAsAAABJAAoAAAACAAwAAABIAAkAAAAYAAoAAABJAAcAAAAZAAgAAABJAAgAAAACAAoAAABJAAkAAAACAAsAAABKAAcAAAAaAAgAAABKAAgAAAADAAoAAABKAAkAAAADAAsAAABLAAcAAAAbAAgAAABLAAgAAAAEAAoAAABMAAcAAAAcAAgAAABMAAgAAAAFAAoAAABNAAcAAAAdAAgAAABNAAgAAAAGAAoAAABNAAkAAAAGAAsAAABOAAcAAAAeAAgAAABOAAgAAAAHAAoAAABOAAkAAAAHAAsAAABKAAoAAAADAAwAAABOAAoAAAAeAAsAAABPAAgAAAAIAAoAAABPAAkAAAAIAAsAAABPAAoAAAAIAAwAAABPAAsAAAAIAA0AAAAuAAwAAAABAAwAAAA3AAwAAAAAAAwAAAA4AAwAAAAAAAwAAAA5AAwAAAAAAAwAAAA6AAwAAAAAAAwAAAA7AAwAAAAAAAwAAAA8AAwAAAAAAAwAAAA5AAsAAAAAAAwAAAA6AAsAAAAAAAwAAAA7AAsAAAAAAAwAAAA9AAsAAAAAAAwAAAA+AAsAAAAAAAwAAAA/AAsAAAAAAAwAAABAAAsAAAAAAAwAAAA+AAoAAAAAAAwAAAA/AAoAAAAAAAwAAABDAAwAAAAAAAwAAABEAAwAAAAAAAwAAABFAAwAAAAAAAwAAABGAAwAAAAAAAwAAABGAAsAAAAAAAwAAABHAAsAAAAAAAwAAABIAAsAAAAAAAwAAABJAAsAAAAAAAwAAABKAAsAAAAAAAwAAABLAAsAAAAAAAwAAABMAAsAAAAAAAwAAABNAAsAAAAAAAwAAABOAAsAAAAAAAwAAABPAAwAAAAAAAwAAABOAAwAAAAAAAwAAABNAAwAAAAAAAwAAABMAAwAAAAAAAwAAABLAAwAAAAAAAwAAABKAAwAAAAAAAwAAABJAAwAAAAAAAwAAABIAAwAAAAAAAwAAABHAAwAAAAAAAwAAABEAAsAAAAAAAwAAABFAAsAAAAAAAwAAABGAAoAAAAAAAwAAABHAAoAAAAAAAwAAABLAAkAAAAAAAwAAABLAAoAAAAAAAwAAABMAAoAAAAAAAwAAABMAAkAAAAAAAwAAABNAAoAAAAAAAwAAABQAAkAAAAJAAsAAABQAAoAAAAJAAwAAABQAAsAAAAJAA0AAABRAAkAAAAKAAsAAABRAAoAAAAKAAwAAAA=")
 tile_set = ExtResource("2_oa7qo")
 
+[node name="Bomb" parent="." instance=ExtResource("4_t2io7")]
+position = Vector2(144, 192)
+
 [node name="Bullwinkle" parent="." instance=ExtResource("1_fsveu")]
 position = Vector2(64, 176)
 
@@ -24,9 +30,6 @@ position = Vector2(64, 176)
 zoom = Vector2(3, 3)
 limit_left = 0
 limit_bottom = 224
-
-[node name="Bomb" parent="." instance=ExtResource("4_t2io7")]
-position = Vector2(144, 192)
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 
@@ -37,34 +40,59 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("6_tywak")
 
-[node name="HFlowContainer" type="HFlowContainer" parent="UILayer/UIContainer"]
+[node name="Panel" type="Panel" parent="UILayer/UIContainer"]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
+size_flags_vertical = 0
 
-[node name="Health" type="Label" parent="UILayer/UIContainer/HFlowContainer"]
+[node name="HFlowContainer" type="HFlowContainer" parent="UILayer/UIContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Health" type="Label" parent="UILayer/UIContainer/Panel/HFlowContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-text = "Health"
+text = "12/12"
 
-[node name="Bombs" type="Label" parent="UILayer/UIContainer/HFlowContainer"]
+[node name="TextureRect" type="TextureRect" parent="UILayer/UIContainer/Panel/HFlowContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("6_28dud")
+
+[node name="Bombs" type="Label" parent="UILayer/UIContainer/Panel/HFlowContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-text = "Health"
+text = "10"
 
-[node name="Lives" type="Label" parent="UILayer/UIContainer/HFlowContainer"]
+[node name="TextureRect2" type="TextureRect" parent="UILayer/UIContainer/Panel/HFlowContainer"]
+layout_mode = 2
+texture = ExtResource("7_u1cvl")
+
+[node name="Lives" type="Label" parent="UILayer/UIContainer/Panel/HFlowContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-text = "Health"
+text = "4"
 
-[node name="Score" type="Label" parent="UILayer/UIContainer/HFlowContainer"]
+[node name="VSeparator" type="VSeparator" parent="UILayer/UIContainer/Panel/HFlowContainer"]
+layout_mode = 2
+
+[node name="Score" type="Label" parent="UILayer/UIContainer/Panel/HFlowContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 8
 size_flags_vertical = 0
-text = "Health"
+text = "0"
+horizontal_alignment = 2
