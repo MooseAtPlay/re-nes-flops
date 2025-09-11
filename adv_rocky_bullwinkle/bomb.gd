@@ -15,7 +15,7 @@ var has_damaged_player: bool = false
 var velocity: Vector2 = Vector2.ZERO
 var is_held: bool = false
 
-const ARMED_EXPLODE_TIME = 2.0 # in seconds
+const ARMED_EXPLODE_TIME = 5.0 # in seconds
 const GRAVITY = 360.0
 
 # Called when the node enters the scene tree for the first time.
@@ -52,12 +52,10 @@ func _process(delta: float) -> void:
 				velocity.y = 0.0
 
 			position += velocity * delta
-			print("Thrown bomb moving - Position: ", position, " Velocity: ", velocity)
 		else:
 			# Non-thrown bomb: apply gravity directly to position (original behavior)
 			if not is_on_floor():
 				position.y += GRAVITY * delta
-				print("Bomb falling - Position: ", position)
 	
 	# Handle armed bomb timer
 	if state == BombState.ARMED:

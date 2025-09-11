@@ -1,8 +1,12 @@
-[gd_scene load_steps=20 format=3 uid="uid://cgnxvjsdkvjah"]
+[gd_scene load_steps=22 format=3 uid="uid://cgnxvjsdkvjah"]
 
 [ext_resource type="Script" uid="uid://065md10dby2v" path="res://adv_rocky_bullwinkle/bullwinkle.gd" id="1_q6axh"]
 [ext_resource type="Texture2D" uid="uid://jluonenj0b4d" path="res://adv_rocky_bullwinkle/assets/bullwinkle_run.png" id="3_iopbq"]
 [ext_resource type="Texture2D" uid="uid://bwubugau2epwr" path="res://adv_rocky_bullwinkle/assets/bullwinkle_idle.png" id="3_mtfkq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4wr2s"]
+atlas = ExtResource("3_iopbq")
+region = Rect2(360, 0, 36, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q6axh"]
 atlas = ExtResource("3_mtfkq")
@@ -62,6 +66,14 @@ region = Rect2(324, 0, 36, 48)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_jgwg0"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4wr2s")
+}],
+"loop": true,
+"name": &"bend",
+"speed": 1.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_q6axh")
@@ -159,12 +171,15 @@ animations = [{
 radius = 6.0
 height = 44.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mtfkq"]
+size = Vector2(20, 11)
+
 [node name="Bullwinkle" type="CharacterBody2D"]
 script = ExtResource("1_q6axh")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_jgwg0")
-animation = &"hold_bomb"
+animation = &"bend"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -173,3 +188,9 @@ shape = SubResource("CapsuleShape2D_cbnt7")
 
 [node name="BombMarker" type="Marker2D" parent="."]
 position = Vector2(-18, -20)
+
+[node name="BombChecker" type="Area2D" parent="."]
+
+[node name="BombCheckerCollisionShape2D" type="CollisionShape2D" parent="BombChecker"]
+position = Vector2(0, 18.5)
+shape = SubResource("RectangleShape2D_mtfkq")

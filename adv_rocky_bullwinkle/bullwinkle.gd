@@ -2,10 +2,18 @@ extends CharacterBody2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var bomb_marker: Marker2D = $BombMarker
+@onready var bomb_checker: Area2D = $BombChecker
 
 func _ready() -> void:
 	# Connect to animation finished signal
 	animated_sprite.animation_finished.connect(_on_animation_finished)
+	
+	# Connect bomb checker signals
+	if bomb_checker:
+		bomb_checker.area_entered.connect(_on_bomb_checker_area_entered)
+		bomb_checker.area_exited.connect(_on_bomb_checker_area_exited)
+	else:
+		print("ERROR: Bomb checker not found")
 
 const MAX_SPEED = 300.0
 const ACCELERATION = 800.0
@@ -20,9 +28,13 @@ const THROW_VERTICAL_VELOCITY = -160.0
 # Animation state tracking
 var is_holding_bomb: bool = false
 var is_throwing_bomb: bool = false
+var is_bending: bool = false
 
 # Direction tracking
 var facing_left: bool = false
+
+# Bomb pickup tracking
+var nearby_bombs: Array[Node2D] = []
 
 
 func _physics_process(delta: float) -> void:
@@ -30,30 +42,38 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	# Handle jump.
-	if Input.is_action_just_pressed("jump") and is_on_floor():
+	# Handle jump (disabled when bending)
+	if Input.is_action_just_pressed("jump") and is_on_floor() and not is_bending:
 		velocity.y = JUMP_VELOCITY
 	
 	# Handle bomb throwing
 	handle_bomb_input()
+	
+	# Handle bending
+	handle_bend_input()
 
-	# Get the input direction and handle movement (works both on ground and in air)
-	var direction := Input.get_axis("move_left", "move_right")
-	if direction:
-		# Apply acceleration in the direction of input (works in air and on ground)
-		velocity.x = move_toward(velocity.x, direction * MAX_SPEED, ACCELERATION * delta)
-		# Flip sprite when moving left and update direction tracking
-		animated_sprite.flip_h = direction < 0
-		facing_left = direction < 0
-	else:
-		# Apply friction when no input (only on ground)
-		if is_on_floor():
-			velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
+	# Get the input direction and handle movement (disabled when bending)
+	if not is_bending:
+		var direction := Input.get_axis("move_left", "move_right")
+		if direction:
+			# Apply acceleration in the direction of input (works in air and on ground)
+			velocity.x = move_toward(velocity.x, direction * MAX_SPEED, ACCELERATION * delta)
+			# Flip sprite when moving left and update direction tracking
+			animated_sprite.flip_h = direction < 0
+			facing_left = direction < 0
+		else:
+			# Apply friction when no input (only on ground)
+			if is_on_floor():
+				velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
 	
 	# Handle animations based on bomb state and ground state
 	if is_throwing_bomb:
 		# Don't change animation while throwing - let it finish
 		pass
+	elif is_bending:
+		# Play bend animation when bending
+		if animated_sprite.animation != "bend":
+			animated_sprite.play("bend")
 	elif is_holding_bomb:
 		# Play hold_bomb animation when holding a bomb
 		if animated_sprite.animation != "hold_bomb":
@@ -64,6 +84,7 @@ func _physics_process(delta: float) -> void:
 			animated_sprite.play("jump")
 	else:
 		# Ground-based animations
+		var direction := Input.get_axis("move_left", "move_right")
 		if direction:
 			# Play run animation when moving on ground
 			if animated_sprite.animation != "run":
@@ -185,9 +206,64 @@ func clear_held_bomb() -> void:
 	
 	print("Cleared held bomb (exploded while held)")
 
+func handle_bend_input() -> void:
+	"""Handle bend input"""
+	# Check if bend action is pressed (start bending)
+	if Input.is_action_just_pressed("bend") and not is_bending and is_on_floor() and abs(velocity.x) < 10:
+		start_bending()
+	
+	# Check if bend action is released (stop bending)
+	elif Input.is_action_just_released("bend") and is_bending:
+		stop_bending()
+
+func start_bending() -> void:
+	"""Start bending animation and check for bomb pickup"""
+	is_bending = true
+	print("Started bending")
+	
+	# Check for bomb pickup
+	check_bomb_pickup()
+
+func stop_bending() -> void:
+	"""Stop bending animation"""
+	is_bending = false
+	print("Stopped bending")
+
+func check_bomb_pickup() -> void:
+	"""Check if character is colliding with an unarmed bomb and pick it up"""
+	# Check nearby bombs that are in the Area2D
+	for bomb in nearby_bombs:
+		if bomb.has_method("get") and bomb.get("state") == 0:  # UNARMED state
+			pickup_bomb(bomb)
+			break
+
+func pickup_bomb(bomb: Node2D) -> void:
+	"""Pick up an unarmed bomb"""
+	# Add bomb to player stats
+	var game_state = get_node("/root/AdvRockyBullwinkle")
+	if game_state:
+		game_state.add_bombs(1)
+		print("Picked up bomb! Total bombs: ", game_state.bombs)
+	
+	# Free the bomb node
+	bomb.queue_free()
+	print("Bomb picked up and removed")
+
 func _on_animation_finished() -> void:
 	"""Handle when animation finishes"""
 	if animated_sprite.animation == "throw_bomb":
 		# Throw animation finished, return to normal animation state
 		is_throwing_bomb = false
 		print("Throw bomb animation finished")
+
+func _on_bomb_checker_area_entered(area: Area2D) -> void:
+	"""Handle when a bomb enters the bomb checker area"""
+	if area.is_in_group("bombs"):
+		nearby_bombs.append(area)
+		print("Bomb entered pickup range: ", area.name)
+
+func _on_bomb_checker_area_exited(area: Area2D) -> void:
+	"""Handle when a bomb exits the bomb checker area"""
+	if area.is_in_group("bombs"):
+		nearby_bombs.erase(area)
+		print("Bomb left pickup range: ", area.name)
