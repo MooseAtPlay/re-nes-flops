@@ -17,6 +17,7 @@ var is_held: bool = false
 
 const ARMED_EXPLODE_TIME = 5.0 # in seconds
 const GRAVITY = 360.0
+const FRICTION = 800.0  # Friction when sliding on ground
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -48,8 +49,10 @@ func _process(delta: float) -> void:
 			if not is_on_floor():
 				velocity.y += GRAVITY * delta
 			else:
-				# When on floor, set vertical velocity to 0, but it can still slide horizontally
+				# When on floor, set vertical velocity to 0 and apply friction to horizontal velocity
 				velocity.y = 0.0
+				# Apply friction to horizontal movement
+				velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
 
 			position += velocity * delta
 		else:
