@@ -10,12 +10,12 @@ enum BombState {
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 @export var state: BombState = BombState.UNARMED
+@export var armed_explode_time: float = 2.0  # in seconds
+
 var armed_timer: float = 0.0
 var has_damaged_player: bool = false
 var velocity: Vector2 = Vector2.ZERO
 var is_held: bool = false
-
-const ARMED_EXPLODE_TIME = 5.0 # in seconds
 const GRAVITY = 360.0
 const FRICTION = 800.0  # Friction when sliding on ground
 
@@ -63,7 +63,7 @@ func _process(delta: float) -> void:
 	# Handle armed bomb timer
 	if state == BombState.ARMED:
 		armed_timer += delta
-		if armed_timer >= ARMED_EXPLODE_TIME:
+		if armed_timer >= armed_explode_time:
 			print("Bomb timer expired, exploding!")
 			explode()
 	

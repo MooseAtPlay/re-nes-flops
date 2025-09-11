@@ -24,6 +24,7 @@ const JUMP_VELOCITY = -400.0
 var held_bomb: Node2D = null
 const THROW_HORIZONTAL_VELOCITY = 120.0
 const THROW_VERTICAL_VELOCITY = -160.0
+@export var throw_variance: float = 20.0
 
 # Animation state tracking
 var is_holding_bomb: bool = false
@@ -137,8 +138,14 @@ func create_held_bomb() -> void:
 	var bomb_scene = preload("res://adv_rocky_bullwinkle/bomb.tscn")
 	var new_bomb = bomb_scene.instantiate()
 	
-	# Add bomb to the game state (root node)
-	game_state.add_child(new_bomb)
+	# Add bomb to the Bombs node
+	var bombs_node = game_state.get_node("Bombs")
+	if bombs_node:
+		bombs_node.add_child(new_bomb)
+	else:
+		# Fallback to game_state if Bombs node not found
+		game_state.add_child(new_bomb)
+		print("WARNING: Bombs node not found, added bomb to game_state")
 	
 	# Set bomb position using marker, adjusting for direction
 	if bomb_marker:
@@ -178,10 +185,13 @@ func throw_bomb() -> void:
 	# Release the bomb from being held
 	held_bomb.set_held(false)
 	
-	# Set bomb velocity for throwing, adding character's horizontal velocity
+	# Set bomb velocity for throwing, adding character's horizontal velocity and random variance
+	var horizontal_variance = randf_range(0.0, throw_variance)
+	var vertical_variance = randf_range(0.0, throw_variance)
+	
 	held_bomb.velocity = Vector2(
-		THROW_HORIZONTAL_VELOCITY * throw_direction + velocity.x,
-		THROW_VERTICAL_VELOCITY
+		THROW_HORIZONTAL_VELOCITY * throw_direction + velocity.x + horizontal_variance,
+		THROW_VERTICAL_VELOCITY + vertical_variance
 	)
 	
 	# Clear held bomb reference
