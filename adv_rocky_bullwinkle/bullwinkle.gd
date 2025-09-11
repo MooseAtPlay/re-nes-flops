@@ -1,7 +1,5 @@
-extends CharacterBody2D
+extends BombCharacter
 
-@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var bomb_marker: Marker2D = $BombMarker
 @onready var bomb_checker: Area2D = $BombChecker
 
 func _ready() -> void:
@@ -20,23 +18,11 @@ const ACCELERATION = 800.0
 const FRICTION = 1000.0
 const JUMP_VELOCITY = -400.0
 
-# Bomb throwing variables
-var held_bomb: Node2D = null
-const THROW_HORIZONTAL_VELOCITY = 120.0
-const THROW_VERTICAL_VELOCITY = -160.0
-@export var throw_variance: float = 20.0
-
 # Animation state tracking
-var is_holding_bomb: bool = false
-var is_throwing_bomb: bool = false
 var is_bending: bool = false
-
-# Direction tracking
-var facing_left: bool = false
 
 # Bomb pickup tracking
 var nearby_bombs: Array[Node2D] = []
-
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -174,48 +160,6 @@ func create_held_bomb() -> void:
 	
 	print("Created and holding bomb")
 
-func throw_bomb() -> void:
-	"""Throw the held bomb"""
-	if held_bomb == null:
-		return
-	
-	# Calculate throw direction based on character facing
-	var throw_direction = 1 if not animated_sprite.flip_h else -1
-	
-	# Release the bomb from being held
-	held_bomb.set_held(false)
-	
-	# Set bomb velocity for throwing, adding character's horizontal velocity and random variance
-	var horizontal_variance = randf_range(0.0, throw_variance)
-	var vertical_variance = randf_range(0.0, throw_variance)
-	
-	held_bomb.velocity = Vector2(
-		THROW_HORIZONTAL_VELOCITY * throw_direction + velocity.x + horizontal_variance,
-		THROW_VERTICAL_VELOCITY + vertical_variance
-	)
-	
-	# Clear held bomb reference
-	held_bomb = null
-	
-	# Set throwing state and play throw animation
-	is_holding_bomb = false
-	is_throwing_bomb = true
-	animated_sprite.play("throw_bomb")
-	
-	print("Threw bomb")
-
-func clear_held_bomb() -> void:
-	"""Clear the held bomb reference (called when bomb explodes while held)"""
-	if held_bomb:
-		held_bomb.set_held(false)
-		held_bomb = null
-	
-	# Clear bomb states and let animation system return to appropriate animation
-	is_holding_bomb = false
-	is_throwing_bomb = false
-	
-	print("Cleared held bomb (exploded while held)")
-
 func handle_bend_input() -> void:
 	"""Handle bend input"""
 	# Check if bend action is pressed (start bending)
@@ -258,13 +202,6 @@ func pickup_bomb(bomb: Node2D) -> void:
 	# Free the bomb node
 	bomb.queue_free()
 	print("Bomb picked up and removed")
-
-func _on_animation_finished() -> void:
-	"""Handle when animation finishes"""
-	if animated_sprite.animation == "throw_bomb":
-		# Throw animation finished, return to normal animation state
-		is_throwing_bomb = false
-		print("Throw bomb animation finished")
 
 func _on_bomb_checker_area_entered(area: Area2D) -> void:
 	"""Handle when a bomb enters the bomb checker area"""

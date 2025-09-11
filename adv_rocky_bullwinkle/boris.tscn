@@ -77,3 +77,6 @@ frame_progress = 0.21301638
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(3, 0)
 shape = SubResource("CapsuleShape2D_s41ie")
+
+[node name="BombMarker" type="Marker2D" parent="."]
+position = Vector2(20, -11)
