@@ -1,11 +1,114 @@
 extends Area2D
 
+enum BombState {
+	UNARMED,
+	ARMED,
+	EXPLODING
+}
+
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D
+
+@export var state: BombState = BombState.UNARMED
+var armed_timer: float = 0.0
+var has_damaged_player: bool = false
+
+const ARMED_EXPLODE_TIME = 1.5  # 1500ms
+const GRAVITY = 980.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
-
+	print("Bomb _ready() called - State: ", state)
+	
+	# Check if animated_sprite exists
+	if animated_sprite:
+		print("AnimatedSprite2D found, connecting signals")
+		# Connect to animation finished signal
+		animated_sprite.animation_finished.connect(_on_animation_finished)
+		
+		# Start with default animation
+		animated_sprite.play("default")
+		print("Playing default animation")
+	else:
+		print("ERROR: AnimatedSprite2D not found!")
+	
+	# Connect to body entered signal
+	body_entered.connect(_on_body_entered)
+	print("Bomb ready - Position: ", position, " State: ", state)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	# Only apply gravity if not on floor and not exploding
+	if state != BombState.EXPLODING and not is_on_floor():
+		position.y += GRAVITY * delta
+		print("Bomb falling - Position: ", position)
+	
+	# Handle armed bomb timer
+	if state == BombState.ARMED:
+		armed_timer += delta
+		if armed_timer >= ARMED_EXPLODE_TIME:
+			print("Bomb timer expired, exploding!")
+			explode()
+
+func is_on_floor() -> bool:
+	"""Check if bomb is touching something in the 'floor' group"""
+	var bodies = get_overlapping_bodies()
+	for body in bodies:
+		if body.is_in_group("floor"):
+			return true
+	return false
+
+func arm_bomb() -> void:
+	"""Arm the bomb so it can explode"""
+	print("Bomb armed!")
+	state = BombState.ARMED
+	armed_timer = 0.0
+
+func explode() -> void:
+	"""Explode the bomb"""
+	print("Bomb exploding! State changing to EXPLODING")
+	state = BombState.EXPLODING
+	armed_timer = 0.0
+	has_damaged_player = false
+	
+	# Stop all movement (gravity no longer applies)
+	# This is handled by not applying gravity in _process when exploding
+	
+	# Change to exploding animation
+	if animated_sprite:
+		animated_sprite.play("exploding")
+		print("Playing exploding animation")
+	else:
+		print("ERROR: Cannot play exploding animation - AnimatedSprite2D not found!")
+
+func _on_body_entered(body: Node2D) -> void:
+	"""Handle when a body enters the bomb area"""
+	print("Body entered bomb area: ", body.name, " State: ", state)
+	if state == BombState.ARMED:
+		# Armed bombs explode when touched
+		print("Armed bomb touched, exploding!")
+		explode()
+	elif state == BombState.EXPLODING:
+		# Exploding bombs damage the player
+		if body.name == "Bullwinkle" and not has_damaged_player:
+			print("Bullwinkle hit by exploding bomb!")
+			has_damaged_player = true
+			# Get the game state and damage the player
+			var game_state = get_node("/root/adv_rocky_bullwinkle")
+			if game_state:
+				game_state.take_damage(1)
+				print("Player damaged by bomb")
+			else:
+				print("ERROR: Could not find game state to damage player")
+
+func _on_animation_finished() -> void:
+	"""Handle when animation finishes"""
+	if animated_sprite:
+		print("Animation finished: ", animated_sprite.animation)
+	else:
+		print("Animation finished: No sprite")
+	
+	if state == BombState.EXPLODING:
+		# When exploding animation finishes, free the bomb
+		print("Exploding animation finished, freeing bomb")
+		queue_free()
