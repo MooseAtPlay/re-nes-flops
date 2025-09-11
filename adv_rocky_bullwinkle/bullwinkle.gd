@@ -85,14 +85,18 @@ func _physics_process(delta: float) -> void:
 		# Use marker position, adjusting for direction
 		var marker_pos = bomb_marker.global_position
 		if facing_left:
-			# When facing left, subtract 2x the marker's local x position
-			held_bomb.position = marker_pos - Vector2(2 * abs(bomb_marker.position.x), 0)
+			# When facing left, add 2x the marker's local x position
+			held_bomb.position = marker_pos + Vector2(2 * abs(bomb_marker.position.x), 0)
 		else:
 			# When facing right, use marker position directly
 			held_bomb.position = marker_pos
 
 func handle_bomb_input() -> void:
 	"""Handle bomb throwing input"""
+	# Don't allow new bomb creation while throwing
+	if is_throwing_bomb:
+		return
+	
 	# Check if hold_bomb action is pressed (start holding)
 	if Input.is_action_just_pressed("hold_bomb") and held_bomb == null:
 		create_held_bomb()
@@ -153,9 +157,9 @@ func throw_bomb() -> void:
 	# Release the bomb from being held
 	held_bomb.set_held(false)
 	
-	# Set bomb velocity for throwing
+	# Set bomb velocity for throwing, adding character's horizontal velocity
 	held_bomb.velocity = Vector2(
-		THROW_HORIZONTAL_VELOCITY * throw_direction,
+		THROW_HORIZONTAL_VELOCITY * throw_direction + velocity.x,
 		THROW_VERTICAL_VELOCITY
 	)
 	
