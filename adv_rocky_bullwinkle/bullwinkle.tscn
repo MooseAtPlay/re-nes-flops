@@ -164,12 +164,12 @@ script = ExtResource("1_q6axh")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_jgwg0")
-animation = &"throw_bomb"
+animation = &"hold_bomb"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)
 shape = SubResource("CapsuleShape2D_cbnt7")
 
-[node name="Marker2D" type="Marker2D" parent="."]
-position = Vector2(0, -26)
+[node name="BombMarker" type="Marker2D" parent="."]
+position = Vector2(-18, -20)

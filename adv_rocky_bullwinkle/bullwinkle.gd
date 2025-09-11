@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var bomb_marker: Marker2D = $BombMarker
 
 func _ready() -> void:
 	# Connect to animation finished signal
@@ -14,12 +15,14 @@ const JUMP_VELOCITY = -400.0
 # Bomb throwing variables
 var held_bomb: Node2D = null
 const THROW_HORIZONTAL_VELOCITY = 120.0
-const THROW_VERTICAL_VELOCITY = -80.0
-const BOMB_HOLD_OFFSET = Vector2(0, -60)  # Position bomb above character
+const THROW_VERTICAL_VELOCITY = -160.0
 
 # Animation state tracking
 var is_holding_bomb: bool = false
 var is_throwing_bomb: bool = false
+
+# Direction tracking
+var facing_left: bool = false
 
 
 func _physics_process(delta: float) -> void:
@@ -39,8 +42,9 @@ func _physics_process(delta: float) -> void:
 	if direction:
 		# Apply acceleration in the direction of input (works in air and on ground)
 		velocity.x = move_toward(velocity.x, direction * MAX_SPEED, ACCELERATION * delta)
-		# Flip sprite when moving left
+		# Flip sprite when moving left and update direction tracking
 		animated_sprite.flip_h = direction < 0
+		facing_left = direction < 0
 	else:
 		# Apply friction when no input (only on ground)
 		if is_on_floor():
@@ -77,8 +81,15 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	
 	# Update held bomb position if we have one
-	if held_bomb:
-		held_bomb.position = global_position + BOMB_HOLD_OFFSET
+	if held_bomb and bomb_marker:
+		# Use marker position, adjusting for direction
+		var marker_pos = bomb_marker.global_position
+		if facing_left:
+			# When facing left, subtract 2x the marker's local x position
+			held_bomb.position = marker_pos - Vector2(2 * abs(bomb_marker.position.x), 0)
+		else:
+			# When facing right, use marker position directly
+			held_bomb.position = marker_pos
 
 func handle_bomb_input() -> void:
 	"""Handle bomb throwing input"""
@@ -104,8 +115,18 @@ func create_held_bomb() -> void:
 	# Add bomb to the game state (root node)
 	game_state.add_child(new_bomb)
 	
-	# Set bomb position above character
-	new_bomb.position = global_position + BOMB_HOLD_OFFSET
+	# Set bomb position using marker, adjusting for direction
+	if bomb_marker:
+		var marker_pos = bomb_marker.global_position
+		if facing_left:
+			# When facing left, subtract 2x the marker's local x position
+			new_bomb.position = marker_pos - Vector2(2 * abs(bomb_marker.position.x), 0)
+		else:
+			# When facing right, use marker position directly
+			new_bomb.position = marker_pos
+	else:
+		# Fallback to character position if marker not found
+		new_bomb.position = global_position + Vector2(0, -60)
 	
 	# Set bomb to armed state
 	new_bomb.state = new_bomb.BombState.ARMED
