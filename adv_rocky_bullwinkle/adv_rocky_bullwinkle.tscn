@@ -45,7 +45,7 @@ limit_left = 0
 limit_bottom = 224
 
 [node name="Boris" parent="." instance=ExtResource("9_uflor")]
-position = Vector2(328, 184)
+position = Vector2(320, 184)
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 visible = false

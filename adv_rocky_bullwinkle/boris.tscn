@@ -5,27 +5,27 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1gwdu"]
 atlas = ExtResource("1_0sv5q")
-region = Rect2(64, 0, 32, 32)
+region = Rect2(72, 0, 36, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tfhk1"]
 atlas = ExtResource("1_0sv5q")
-region = Rect2(0, 0, 32, 32)
+region = Rect2(108, 0, 36, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2q5b3"]
 atlas = ExtResource("1_0sv5q")
-region = Rect2(32, 0, 32, 32)
+region = Rect2(0, 0, 36, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qlr0h"]
 atlas = ExtResource("1_0sv5q")
-region = Rect2(64, 0, 32, 32)
+region = Rect2(36, 0, 36, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yvvhp"]
 atlas = ExtResource("1_0sv5q")
-region = Rect2(96, 0, 32, 32)
+region = Rect2(72, 0, 36, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kab7c"]
 atlas = ExtResource("1_0sv5q")
-region = Rect2(128, 0, 32, 32)
+region = Rect2(144, 0, 36, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_16ha7"]
 animations = [{
@@ -40,12 +40,20 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_tfhk1")
+}],
+"loop": false,
+"name": &"hold_bomb",
+"speed": 1.0
 }, {
+"frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_2q5b3")
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_qlr0h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yvvhp")
 }],
 "loop": true,
 "name": &"idle",
@@ -53,30 +61,33 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_yvvhp")
-}, {
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_kab7c")
 }],
 "loop": false,
 "name": &"throw_bomb",
-"speed": 2.0
+"speed": 1.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s41ie"]
+radius = 8.0
 
 [node name="Boris" type="CharacterBody2D"]
 script = ExtResource("1_1gwdu")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_16ha7")
-animation = &"idle"
+animation = &"hold_bomb"
 autoplay = "idle"
-frame_progress = 0.21301638
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(3, 0)
+position = Vector2(-1, 0)
 shape = SubResource("CapsuleShape2D_s41ie")
 
 [node name="BombMarker" type="Marker2D" parent="."]
-position = Vector2(20, -11)
+position = Vector2(-20, -13)
+
+[node name="ThrowBombTimer" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
+[connection signal="timeout" from="ThrowBombTimer" to="." method="_on_throw_bomb_timer_timeout"]

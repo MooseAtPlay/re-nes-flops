@@ -109,7 +109,7 @@ func throw_bomb() -> void:
 	is_throwing_bomb = true
 	animated_sprite.play("throw_bomb")
 	
-	print("Threw bomb - is_throwing_bomb set to true, playing throw_bomb animation")
+	print("Threw bomb")
 
 func clear_held_bomb() -> void:
 	"""Clear the held bomb reference (called when bomb explodes while held)"""
@@ -125,11 +125,8 @@ func clear_held_bomb() -> void:
 
 func _on_animation_finished() -> void:
 	"""Handle when animation finishes"""
-	print("Animation finished")
 	if animated_sprite and animated_sprite.animation == "throw_bomb":
 		# Throw animation finished, return to normal animation state
 		is_throwing_bomb = false
 		print("Throw bomb animation finished - is_throwing_bomb set to false")
-	else:
-		print("Animation finished but not throw_bomb")
 
