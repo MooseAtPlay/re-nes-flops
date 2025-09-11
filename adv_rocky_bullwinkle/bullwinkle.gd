@@ -2,6 +2,10 @@ extends CharacterBody2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
+func _ready() -> void:
+	# Connect to animation finished signal
+	animated_sprite.animation_finished.connect(_on_animation_finished)
+
 const MAX_SPEED = 300.0
 const ACCELERATION = 800.0
 const FRICTION = 1000.0
@@ -12,6 +16,10 @@ var held_bomb: Node2D = null
 const THROW_HORIZONTAL_VELOCITY = 120.0
 const THROW_VERTICAL_VELOCITY = -80.0
 const BOMB_HOLD_OFFSET = Vector2(0, -60)  # Position bomb above character
+
+# Animation state tracking
+var is_holding_bomb: bool = false
+var is_throwing_bomb: bool = false
 
 
 func _physics_process(delta: float) -> void:
@@ -38,8 +46,15 @@ func _physics_process(delta: float) -> void:
 		if is_on_floor():
 			velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
 	
-	# Handle animations based on ground state
-	if not is_on_floor():
+	# Handle animations based on bomb state and ground state
+	if is_throwing_bomb:
+		# Don't change animation while throwing - let it finish
+		pass
+	elif is_holding_bomb:
+		# Play hold_bomb animation when holding a bomb
+		if animated_sprite.animation != "hold_bomb":
+			animated_sprite.play("hold_bomb")
+	elif not is_on_floor():
 		# Play jump animation when in air
 		if animated_sprite.animation != "jump":
 			animated_sprite.play("jump")
@@ -101,6 +116,9 @@ func create_held_bomb() -> void:
 	# Store reference to held bomb
 	held_bomb = new_bomb
 	
+	# Set holding state for animation
+	is_holding_bomb = true
+	
 	print("Created and holding bomb")
 
 func throw_bomb() -> void:
@@ -123,6 +141,11 @@ func throw_bomb() -> void:
 	# Clear held bomb reference
 	held_bomb = null
 	
+	# Set throwing state and play throw animation
+	is_holding_bomb = false
+	is_throwing_bomb = true
+	animated_sprite.play("throw_bomb")
+	
 	print("Threw bomb")
 
 func clear_held_bomb() -> void:
@@ -130,4 +153,16 @@ func clear_held_bomb() -> void:
 	if held_bomb:
 		held_bomb.set_held(false)
 		held_bomb = null
+	
+	# Clear bomb states and let animation system return to appropriate animation
+	is_holding_bomb = false
+	is_throwing_bomb = false
+	
 	print("Cleared held bomb (exploded while held)")
+
+func _on_animation_finished() -> void:
+	"""Handle when animation finishes"""
+	if animated_sprite.animation == "throw_bomb":
+		# Throw animation finished, return to normal animation state
+		is_throwing_bomb = false
+		print("Throw bomb animation finished")

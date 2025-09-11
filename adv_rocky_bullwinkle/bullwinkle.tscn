@@ -76,7 +76,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"hold_bomb",
-"speed": 5.0
+"speed": 1.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -113,7 +113,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"jump",
-"speed": 5.0
+"speed": 1.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -144,15 +144,15 @@ animations = [{
 }],
 "loop": true,
 "name": &"skid",
-"speed": 5.0
+"speed": 1.0
 }, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_8wyco")
 }],
-"loop": true,
+"loop": false,
 "name": &"throw_bomb",
-"speed": 5.0
+"speed": 2.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cbnt7"]
