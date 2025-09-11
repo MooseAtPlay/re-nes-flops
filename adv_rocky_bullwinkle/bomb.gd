@@ -12,8 +12,9 @@ enum BombState {
 @export var state: BombState = BombState.UNARMED
 var armed_timer: float = 0.0
 var has_damaged_player: bool = false
+var velocity: Vector2 = Vector2.ZERO
 
-const ARMED_EXPLODE_TIME = 5.5  # 1500ms
+const ARMED_EXPLODE_TIME = 2.0 # in seconds
 const GRAVITY = 9.8 * 8 # 8x gravity
 
 # Called when the node enters the scene tree for the first time.
@@ -38,10 +39,20 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	# Only apply gravity if not on floor and not exploding
-	if state != BombState.EXPLODING and not is_on_floor():
-		position.y += GRAVITY * delta
-		print("Bomb falling - Position: ", position)
+	# Handle movement based on velocity and gravity
+	if state != BombState.EXPLODING:
+		# Check if bomb has been thrown (has velocity)
+		if velocity != Vector2.ZERO:
+			# Thrown bomb: apply gravity to velocity and move by velocity
+			if not is_on_floor():
+				velocity.y += GRAVITY * delta
+			position += velocity * delta
+			print("Thrown bomb moving - Position: ", position, " Velocity: ", velocity)
+		else:
+			# Non-thrown bomb: apply gravity directly to position (original behavior)
+			if not is_on_floor():
+				position.y += GRAVITY * delta
+				print("Bomb falling - Position: ", position)
 	
 	# Handle armed bomb timer
 	if state == BombState.ARMED:
@@ -87,8 +98,13 @@ func explode() -> void:
 	armed_timer = 0.0
 	has_damaged_player = false
 	
-	# Stop all movement (gravity no longer applies)
-	# This is handled by not applying gravity in _process when exploding
+	# Stop all movement
+	velocity = Vector2.ZERO
+	
+	# Clear held bomb reference if this bomb was being held
+	var player = get_node("/root/AdvRockyBullwinkle/Bullwinkle")
+	if player and player.held_bomb == self:
+		player.clear_held_bomb()
 	
 	# Change to exploding animation
 	if animated_sprite:

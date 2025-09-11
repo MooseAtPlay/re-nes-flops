@@ -21,7 +21,8 @@ tile_map_data = PackedByteArray("AAAtAAkAAAAAAAkAAAAtAAoAAAAAAAoAAAAtAAsAAAAAAAs
 tile_set = ExtResource("2_oa7qo")
 
 [node name="Bomb" parent="." instance=ExtResource("4_t2io7")]
-position = Vector2(128, 192)
+position = Vector2(128, 152)
+state = 1
 
 [node name="Bullwinkle" parent="." instance=ExtResource("1_fsveu")]
 position = Vector2(64, 176)
