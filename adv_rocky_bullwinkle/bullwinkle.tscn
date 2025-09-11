@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cgnxvjsdkvjah"]
+[gd_scene load_steps=20 format=3 uid="uid://cgnxvjsdkvjah"]
 
 [ext_resource type="Script" uid="uid://065md10dby2v" path="res://adv_rocky_bullwinkle/bullwinkle.gd" id="1_q6axh"]
 [ext_resource type="Texture2D" uid="uid://jluonenj0b4d" path="res://adv_rocky_bullwinkle/assets/bullwinkle_run.png" id="3_iopbq"]
@@ -7,6 +7,10 @@
 [sub_resource type="AtlasTexture" id="AtlasTexture_q6axh"]
 atlas = ExtResource("3_mtfkq")
 region = Rect2(0, 0, 36, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i2g0i"]
+atlas = ExtResource("3_iopbq")
+region = Rect2(288, 0, 36, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jgwg0"]
 atlas = ExtResource("3_mtfkq")
@@ -52,6 +56,10 @@ region = Rect2(180, 0, 36, 48)
 atlas = ExtResource("3_iopbq")
 region = Rect2(216, 0, 36, 48)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_8wyco"]
+atlas = ExtResource("3_iopbq")
+region = Rect2(324, 0, 36, 48)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_jgwg0"]
 animations = [{
 "frames": [{
@@ -61,6 +69,14 @@ animations = [{
 "loop": true,
 "name": &"default",
 "speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i2g0i")
+}],
+"loop": true,
+"name": &"hold_bomb",
+"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -129,6 +145,14 @@ animations = [{
 "loop": true,
 "name": &"skid",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8wyco")
+}],
+"loop": true,
+"name": &"throw_bomb",
+"speed": 5.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cbnt7"]
@@ -140,9 +164,12 @@ script = ExtResource("1_q6axh")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_jgwg0")
-animation = &"idle"
+animation = &"throw_bomb"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)
 shape = SubResource("CapsuleShape2D_cbnt7")
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(0, -26)

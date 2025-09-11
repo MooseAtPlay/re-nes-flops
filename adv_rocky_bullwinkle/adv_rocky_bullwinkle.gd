@@ -1,11 +1,11 @@
 extends Node2D
 
 # Player Stats
-var health: int = 12
-var max_health: int = 12
-var bombs: int = 10
-var lives: int = 4
-var score: int = 0
+@export var health: int = 12
+@export var max_health: int = 12
+@export var bombs: int = 10
+@export var lives: int = 4
+@export var score: int = 0
 
 # Game State
 var game_paused: bool = false

@@ -16,7 +16,7 @@ var velocity: Vector2 = Vector2.ZERO
 var is_held: bool = false
 
 const ARMED_EXPLODE_TIME = 2.0 # in seconds
-const GRAVITY = 9.8 * 8 # 8x gravity
+const GRAVITY = 360.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -47,6 +47,10 @@ func _process(delta: float) -> void:
 			# Thrown bomb: apply gravity to velocity and move by velocity
 			if not is_on_floor():
 				velocity.y += GRAVITY * delta
+			else:
+				# When on floor, set vertical velocity to 0, but it can still slide horizontally
+				velocity.y = 0.0
+
 			position += velocity * delta
 			print("Thrown bomb moving - Position: ", position, " Velocity: ", velocity)
 		else:
