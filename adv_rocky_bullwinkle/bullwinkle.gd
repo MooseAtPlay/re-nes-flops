@@ -57,14 +57,14 @@ func _physics_process(delta: float) -> void:
 	if is_throwing_bomb:
 		# Don't change animation while throwing - let it finish
 		pass
-	elif is_bending:
-		# Play bend animation when bending
-		if animated_sprite.animation != "bend":
-			animated_sprite.play("bend")
 	elif is_holding_bomb:
 		# Play hold_bomb animation when holding a bomb
 		if animated_sprite.animation != "hold_bomb":
 			animated_sprite.play("hold_bomb")
+	elif is_bending:
+		# Play bend animation when bending
+		if animated_sprite.animation != "bend":
+			animated_sprite.play("bend")
 	elif not is_on_floor():
 		# Play jump animation when in air
 		if animated_sprite.animation != "jump":

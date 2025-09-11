@@ -33,6 +33,7 @@ func _physics_process(_delta: float) -> void:
 		else:
 			# When facing right, use marker position directly
 			held_bomb.position = marker_pos
+	
 
 func create_held_bomb() -> void:
 	"""Create a new bomb and hold it"""

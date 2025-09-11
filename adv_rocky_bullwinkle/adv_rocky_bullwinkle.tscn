@@ -32,10 +32,6 @@ position = Vector2(136, 192)
 [node name="Bomb2" parent="Bombs" instance=ExtResource("4_t2io7")]
 position = Vector2(192, 192)
 
-[node name="Bomb3" parent="Bombs" instance=ExtResource("4_t2io7")]
-position = Vector2(256, 192)
-state = 1
-
 [node name="Bullwinkle" parent="." instance=ExtResource("1_fsveu")]
 position = Vector2(64, 176)
 
@@ -48,7 +44,6 @@ limit_bottom = 224
 position = Vector2(320, 184)
 
 [node name="UILayer" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="UIContainer" type="PanelContainer" parent="UILayer"]
 self_modulate = Color(1, 1, 1, 0)

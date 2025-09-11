@@ -23,7 +23,24 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
+	# Handle animations
+	handle_animations()
+
 	move_and_slide()
+
+func handle_animations() -> void:
+	"""Handle Boris's animations"""
+	if is_throwing_bomb:
+		# Don't change animation while throwing - let it finish
+		pass
+	elif is_holding_bomb:
+		# Play hold_bomb animation when holding a bomb
+		if animated_sprite.animation != "hold_bomb":
+			animated_sprite.play("hold_bomb")
+	else:
+		# Play idle animation when not doing anything else
+		if animated_sprite.animation != "idle":
+			animated_sprite.play("idle")
 
 func _on_throw_bomb_timer_timeout() -> void:
 	"""Called when the main throw timer times out - start bomb throwing sequence"""
