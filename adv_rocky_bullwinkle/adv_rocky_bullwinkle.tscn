@@ -21,7 +21,7 @@ tile_map_data = PackedByteArray("AAAtAAkAAAAAAAkAAAAtAAoAAAAAAAoAAAAtAAsAAAAAAAs
 tile_set = ExtResource("2_oa7qo")
 
 [node name="Bomb" parent="." instance=ExtResource("4_t2io7")]
-position = Vector2(224, 32)
+position = Vector2(64, 112)
 state = 1
 
 [node name="Bullwinkle" parent="." instance=ExtResource("1_fsveu")]
@@ -33,7 +33,6 @@ limit_left = 0
 limit_bottom = 224
 
 [node name="UILayer" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="UIContainer" type="PanelContainer" parent="UILayer"]
 self_modulate = Color(1, 1, 1, 0)

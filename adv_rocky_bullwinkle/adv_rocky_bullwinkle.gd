@@ -127,7 +127,7 @@ func update_ui() -> void:
 
 # Input handling
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):  # ESC key
+	if event.is_action_pressed("pause"):
 		if game_paused:
 			unpause_game()
 		else:

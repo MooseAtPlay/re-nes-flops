@@ -14,11 +14,11 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 
 	# Handle jump.
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 
 	# Get the input direction and handle movement (works both on ground and in air)
-	var direction := Input.get_axis("ui_left", "ui_right")
+	var direction := Input.get_axis("move_left", "move_right")
 	if direction:
 		# Apply acceleration in the direction of input (works in air and on ground)
 		velocity.x = move_toward(velocity.x, direction * MAX_SPEED, ACCELERATION * delta)

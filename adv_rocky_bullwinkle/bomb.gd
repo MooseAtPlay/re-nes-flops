@@ -13,8 +13,8 @@ enum BombState {
 var armed_timer: float = 0.0
 var has_damaged_player: bool = false
 
-const ARMED_EXPLODE_TIME = 1.5  # 1500ms
-const GRAVITY = 980.0
+const ARMED_EXPLODE_TIME = 5.5  # 1500ms
+const GRAVITY = 9.8 * 8 # 8x gravity
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -49,6 +49,22 @@ func _process(delta: float) -> void:
 		if armed_timer >= ARMED_EXPLODE_TIME:
 			print("Bomb timer expired, exploding!")
 			explode()
+	
+	# Handle player damage during exploding state
+	if state == BombState.EXPLODING and not has_damaged_player:
+		var bodies = get_overlapping_bodies()
+		for body in bodies:
+			if body.name == "Bullwinkle":
+				print("Bullwinkle hit by exploding bomb!")
+				has_damaged_player = true
+				# Get the game state and damage the player
+				var game_state = get_node("/root/AdvRockyBullwinkle")
+				if game_state:
+					game_state.take_damage(1)
+					print("Player damaged by bomb")
+				else:
+					print("ERROR: Could not find game state to damage player")
+				break  # Only damage once per frame
 
 func is_on_floor() -> bool:
 	"""Check if bomb is touching something in the 'floor' group"""
@@ -85,21 +101,11 @@ func _on_body_entered(body: Node2D) -> void:
 	"""Handle when a body enters the bomb area"""
 	print("Body entered bomb area: ", body.name, " State: ", state)
 	if state == BombState.ARMED:
-		# Armed bombs explode when touched
-		print("Armed bomb touched, exploding!")
-		explode()
-	elif state == BombState.EXPLODING:
-		# Exploding bombs damage the player
-		if body.name == "Bullwinkle" and not has_damaged_player:
-			print("Bullwinkle hit by exploding bomb!")
-			has_damaged_player = true
-			# Get the game state and damage the player
-			var game_state = get_node("/root/adv_rocky_bullwinkle")
-			if game_state:
-				game_state.take_damage(1)
-				print("Player damaged by bomb")
-			else:
-				print("ERROR: Could not find game state to damage player")
+		# Armed bombs explode when touched by non-floor objects
+		if not body.is_in_group("floor"):
+			print("Armed bomb touched, exploding!")
+			explode()
+		
 
 func _on_animation_finished() -> void:
 	"""Handle when animation finishes"""
