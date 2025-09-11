@@ -1,0 +1,79 @@
+[gd_scene load_steps=11 format=3 uid="uid://dkoxch7tm6o2x"]
+
+[ext_resource type="Texture2D" uid="uid://bhcxh36sud8hh" path="res://adv_rocky_bullwinkle/assets/boris.png" id="1_0sv5q"]
+[ext_resource type="Script" uid="uid://ba4x3eakk0pil" path="res://adv_rocky_bullwinkle/boris.gd" id="1_1gwdu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1gwdu"]
+atlas = ExtResource("1_0sv5q")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tfhk1"]
+atlas = ExtResource("1_0sv5q")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2q5b3"]
+atlas = ExtResource("1_0sv5q")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qlr0h"]
+atlas = ExtResource("1_0sv5q")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yvvhp"]
+atlas = ExtResource("1_0sv5q")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kab7c"]
+atlas = ExtResource("1_0sv5q")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_16ha7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1gwdu")
+}],
+"loop": true,
+"name": &"default",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tfhk1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2q5b3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qlr0h")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yvvhp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kab7c")
+}],
+"loop": false,
+"name": &"throw_bomb",
+"speed": 2.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s41ie"]
+
+[node name="Boris" type="CharacterBody2D"]
+script = ExtResource("1_1gwdu")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_16ha7")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.21301638
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(3, 0)
+shape = SubResource("CapsuleShape2D_s41ie")
