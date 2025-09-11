@@ -95,6 +95,9 @@ func create_held_bomb() -> void:
 	# Set bomb to armed state
 	new_bomb.state = new_bomb.BombState.ARMED
 	
+	# Mark bomb as being held
+	new_bomb.set_held(true)
+	
 	# Store reference to held bomb
 	held_bomb = new_bomb
 	
@@ -107,6 +110,9 @@ func throw_bomb() -> void:
 	
 	# Calculate throw direction based on character facing
 	var throw_direction = 1 if not animated_sprite.flip_h else -1
+	
+	# Release the bomb from being held
+	held_bomb.set_held(false)
 	
 	# Set bomb velocity for throwing
 	held_bomb.velocity = Vector2(
@@ -121,5 +127,7 @@ func throw_bomb() -> void:
 
 func clear_held_bomb() -> void:
 	"""Clear the held bomb reference (called when bomb explodes while held)"""
-	held_bomb = null
+	if held_bomb:
+		held_bomb.set_held(false)
+		held_bomb = null
 	print("Cleared held bomb (exploded while held)")

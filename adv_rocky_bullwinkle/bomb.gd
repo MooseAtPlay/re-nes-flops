@@ -13,6 +13,7 @@ enum BombState {
 var armed_timer: float = 0.0
 var has_damaged_player: bool = false
 var velocity: Vector2 = Vector2.ZERO
+var is_held: bool = false
 
 const ARMED_EXPLODE_TIME = 2.0 # in seconds
 const GRAVITY = 9.8 * 8 # 8x gravity
@@ -40,7 +41,7 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	# Handle movement based on velocity and gravity
-	if state != BombState.EXPLODING:
+	if state != BombState.EXPLODING and not is_held:
 		# Check if bomb has been thrown (has velocity)
 		if velocity != Vector2.ZERO:
 			# Thrown bomb: apply gravity to velocity and move by velocity
@@ -90,6 +91,16 @@ func arm_bomb() -> void:
 	print("Bomb armed!")
 	state = BombState.ARMED
 	armed_timer = 0.0
+
+func set_held(held: bool) -> void:
+	"""Set whether the bomb is being held by the player"""
+	is_held = held
+	if not held:
+		# When released, clear any accumulated velocity from gravity
+		velocity = Vector2.ZERO
+		print("Bomb released from hold")
+	else:
+		print("Bomb is being held")
 
 func explode() -> void:
 	"""Explode the bomb"""
