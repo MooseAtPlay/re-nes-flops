@@ -28,8 +28,8 @@ func _physics_process(_delta: float) -> void:
 		# Use marker position, adjusting for direction
 		var marker_pos = bomb_marker.global_position
 		if facing_left:
-			# When facing left, add 2x the marker's local x position
-			held_bomb.position = marker_pos + Vector2(2 * abs(bomb_marker.position.x), 0)
+			# When facing left, flip the marker's x position
+			held_bomb.position = marker_pos - Vector2(2 * bomb_marker.position.x, 0)
 		else:
 			# When facing right, use marker position directly
 			held_bomb.position = marker_pos
@@ -63,8 +63,8 @@ func create_held_bomb() -> void:
 	if bomb_marker:
 		var marker_pos = bomb_marker.global_position
 		if facing_left:
-			# When facing left, subtract 2x the marker's local x position
-			new_bomb.position = marker_pos - Vector2(2 * abs(bomb_marker.position.x), 0)
+			# When facing left, flip the marker's x position
+			new_bomb.position = marker_pos - Vector2(2 * bomb_marker.position.x, 0)
 		else:
 			# When facing right, use marker position directly
 			new_bomb.position = marker_pos

@@ -11,6 +11,9 @@ const JUMP_VELOCITY = -400.0
 var is_preparing_bomb: bool = false
 var throw_delay_timer: Timer
 
+# Player facing
+var player_facing_timer: Timer
+
 func _ready() -> void:
 	# Call parent _ready first
 	super._ready()
@@ -21,6 +24,13 @@ func _ready() -> void:
 	throw_delay_timer.one_shot = true
 	throw_delay_timer.timeout.connect(_on_throw_delay_timeout)
 	add_child(throw_delay_timer)
+	
+	# Create a timer for checking player position and facing
+	player_facing_timer = Timer.new()
+	player_facing_timer.wait_time = 0.25  # 250ms
+	player_facing_timer.timeout.connect(_on_player_facing_timeout)
+	add_child(player_facing_timer)
+	player_facing_timer.start()
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -81,3 +91,17 @@ func take_damage(amount: int) -> void:
 	if health <= 0:
 		print("Boris defeated!")
 		queue_free()
+
+func _on_player_facing_timeout() -> void:
+	"""Check player position and face them"""
+	var player = get_node("/root/AdvRockyBullwinkle/Bullwinkle")
+	if player:
+		# Check if player is to the left or right of Boris
+		if player.global_position.x < global_position.x:
+			# Player is to the left, face left
+			facing_left = true
+			animated_sprite.flip_h = true
+		else:
+			# Player is to the right, face right
+			facing_left = false
+			animated_sprite.flip_h = false
