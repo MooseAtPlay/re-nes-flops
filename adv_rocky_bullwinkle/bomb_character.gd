@@ -37,10 +37,14 @@ func _physics_process(_delta: float) -> void:
 
 func create_held_bomb() -> void:
 	"""Create a new bomb and hold it"""
-	# Check if we have bombs available
+	# Check if we have bombs available (only for player characters)
 	var game_state = get_node("/root/AdvRockyBullwinkle")
-	if not game_state or not game_state.use_bomb():
-		return  # No bombs available
+	if not game_state:
+		return
+	
+	# Only consume bombs if this is the player (Bullwinkle)
+	if name == "Bullwinkle" and not game_state.use_bomb():
+		return  # No bombs available for player
 	
 	# Load the bomb scene
 	var bomb_scene = preload("res://adv_rocky_bullwinkle/bomb.tscn")

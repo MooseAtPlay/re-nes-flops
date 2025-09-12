@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="Re:NES Flops"
+config/description="Some awful retro games were only a few tweaks away from being not awful. 
+
+This project aims to both help me learn game development and design for different genres and also have fun with pixel art!"
+config/version="0.0.1"
 run/main_scene="uid://nrvqjkb1t7cs"
 config/features=PackedStringArray("4.5", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://dg4s77jjrg4r1"
 
 [display]
 
