@@ -26,11 +26,11 @@ var nearby_bombs: Array[Node2D] = []
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
-	if not is_on_floor():
+	if not is_on_semisolid_floor():
 		velocity += get_gravity() * delta
 
 	# Handle jump (disabled when bending)
-	if Input.is_action_just_pressed("jump") and is_on_floor() and not is_bending:
+	if Input.is_action_just_pressed("jump") and is_on_semisolid_floor() and not is_bending:
 		velocity.y = JUMP_VELOCITY
 	
 	# Handle bomb throwing
@@ -50,7 +50,7 @@ func _physics_process(delta: float) -> void:
 			facing_left = direction < 0
 		else:
 			# Apply friction when no input (only on ground)
-			if is_on_floor():
+			if is_on_semisolid_floor():
 				velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
 	
 	# Handle animations based on bomb state and ground state
@@ -65,7 +65,7 @@ func _physics_process(delta: float) -> void:
 		# Play bend animation when bending
 		if animated_sprite.animation != "bend":
 			animated_sprite.play("bend")
-	elif not is_on_floor():
+	elif not is_on_semisolid_floor():
 		# Play jump animation when in air
 		if animated_sprite.animation != "jump":
 			animated_sprite.play("jump")

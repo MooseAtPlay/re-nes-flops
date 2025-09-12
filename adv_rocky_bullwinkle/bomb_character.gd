@@ -3,6 +3,7 @@ extends CharacterBody2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var bomb_marker: Marker2D = $BombMarker
+@onready var floor_raycast: RayCast2D = $FloorRayCast
 
 # Bomb throwing variables
 var held_bomb: Node2D = null
@@ -83,8 +84,6 @@ func create_held_bomb() -> void:
 	
 	# Set holding state for animation
 	is_holding_bomb = true
-	
-	print("Created and holding bomb")
 
 func throw_bomb() -> void:
 	"""Throw the held bomb"""
@@ -113,8 +112,6 @@ func throw_bomb() -> void:
 	is_holding_bomb = false
 	is_throwing_bomb = true
 	animated_sprite.play("throw_bomb")
-	
-	print("Threw bomb")
 
 func clear_held_bomb() -> void:
 	"""Clear the held bomb reference (called when bomb explodes while held)"""
@@ -125,13 +122,40 @@ func clear_held_bomb() -> void:
 	# Clear bomb states and let animation system return to appropriate animation
 	is_holding_bomb = false
 	is_throwing_bomb = false
+
+func is_on_semisolid_floor() -> bool:
+	"""Check if character is on a semisolid platform (only when moving downward)"""
+	if not floor_raycast:
+		print("DEBUG: No floor_raycast found")
+		return false
 	
-	print("Cleared held bomb (exploded while held)")
+	# Force update the raycast
+	floor_raycast.force_raycast_update()
+	
+	# Debug output
+	print("DEBUG: velocity.y = ", velocity.y, ", ray colliding = ", floor_raycast.is_colliding())
+	if floor_raycast.is_colliding():
+		var collider = floor_raycast.get_collider()
+		print("DEBUG: Ray hit: ", collider.name, ", in floor group: ", collider.is_in_group("floor"))
+	else:
+		print("DEBUG: Ray not hitting anything - check collision mask and floor setup")
+	
+	# Only consider it a floor if we're moving downward
+	if velocity.y <= 0:
+		return false
+	
+	# Check if ray is colliding with a floor (ignore self-collision)
+	if floor_raycast.is_colliding():
+		var collider = floor_raycast.get_collider()
+		# Ignore the character's own BombChecker
+		if collider.name == "BombChecker":
+			return false
+		return collider.is_in_group("floor")
+	return false
 
 func _on_animation_finished() -> void:
 	"""Handle when animation finishes"""
 	if animated_sprite and animated_sprite.animation == "throw_bomb":
 		# Throw animation finished, return to normal animation state
 		is_throwing_bomb = false
-		print("Throw bomb animation finished - is_throwing_bomb set to false")
 

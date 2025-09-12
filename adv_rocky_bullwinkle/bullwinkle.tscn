@@ -169,7 +169,7 @@ animations = [{
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cbnt7"]
 radius = 6.0
-height = 44.0
+height = 42.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mtfkq"]
 size = Vector2(20, 11)
@@ -179,7 +179,10 @@ script = ExtResource("1_q6axh")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_jgwg0")
+animation = &"idle"
 autoplay = "idle"
+frame = 7
+frame_progress = 0.697574
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2)
@@ -191,5 +194,10 @@ position = Vector2(-18, -20)
 [node name="BombChecker" type="Area2D" parent="."]
 
 [node name="BombCheckerCollisionShape2D" type="CollisionShape2D" parent="BombChecker"]
-position = Vector2(0, 18.5)
+position = Vector2(0, 17)
 shape = SubResource("RectangleShape2D_mtfkq")
+
+[node name="FloorRayCast" type="RayCast2D" parent="."]
+position = Vector2(0, 24)
+target_position = Vector2(0, 57)
+collide_with_areas = true
