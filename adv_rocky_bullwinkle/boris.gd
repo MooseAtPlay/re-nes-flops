@@ -3,6 +3,10 @@ extends BombCharacter
 const SPEED = 200.0
 const JUMP_VELOCITY = -400.0
 
+# Health system
+@export var health: int = 6
+@export var max_health: int = 6
+
 # Bomb throwing state
 var is_preparing_bomb: bool = false
 var throw_delay_timer: Timer
@@ -68,3 +72,12 @@ func _on_throw_delay_timeout() -> void:
 	else:
 		print("Boris delay timeout but no bomb to throw")
 		is_preparing_bomb = false
+
+func take_damage(amount: int) -> void:
+	"""Take damage and handle death"""
+	health = max(0, health - amount)
+	print("Boris took ", amount, " damage. Health: ", health, "/", max_health)
+	
+	if health <= 0:
+		print("Boris defeated!")
+		queue_free()

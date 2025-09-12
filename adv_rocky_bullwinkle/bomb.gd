@@ -14,6 +14,7 @@ enum BombState {
 
 var armed_timer: float = 0.0
 var has_damaged_player: bool = false
+var has_damaged_enemy: bool = false
 var velocity: Vector2 = Vector2.ZERO
 var is_held: bool = false
 const GRAVITY = 360.0
@@ -67,11 +68,12 @@ func _process(delta: float) -> void:
 			print("Bomb timer expired, exploding!")
 			explode()
 	
-	# Handle player damage during exploding state
-	if state == BombState.EXPLODING and not has_damaged_player:
+	# Handle damage during exploding state
+	if state == BombState.EXPLODING:
 		var bodies = get_overlapping_bodies()
 		for body in bodies:
-			if body.name == "Bullwinkle":
+			# Damage player if not already damaged
+			if body.name == "Bullwinkle" and not has_damaged_player:
 				print("Bullwinkle hit by exploding bomb!")
 				has_damaged_player = true
 				# Get the game state and damage the player
@@ -81,7 +83,16 @@ func _process(delta: float) -> void:
 					print("Player damaged by bomb")
 				else:
 					print("ERROR: Could not find game state to damage player")
-				break  # Only damage once per frame
+			
+			# Damage enemy if not already damaged
+			elif body.name == "Boris" and not has_damaged_enemy:
+				print("Boris hit by exploding bomb!")
+				has_damaged_enemy = true
+				if body.has_method("take_damage"):
+					body.take_damage(1)
+					print("Boris damaged by bomb")
+				else:
+					print("ERROR: Boris does not have take_damage method")
 
 func is_on_floor() -> bool:
 	"""Check if bomb is touching something in the 'floor' group"""
@@ -113,6 +124,7 @@ func explode() -> void:
 	state = BombState.EXPLODING
 	armed_timer = 0.0
 	has_damaged_player = false
+	has_damaged_enemy = false
 	
 	# Stop all movement
 	velocity = Vector2.ZERO
