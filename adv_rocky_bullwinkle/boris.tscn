@@ -73,6 +73,8 @@ radius = 8.0
 
 [node name="Boris" type="CharacterBody2D"]
 script = ExtResource("1_1gwdu")
+collision_layer = 1
+collision_mask = 3
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_16ha7")
@@ -82,6 +84,7 @@ autoplay = "idle"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-1, 0)
 shape = SubResource("CapsuleShape2D_s41ie")
+one_way_collision = true
 
 [node name="BombMarker" type="Marker2D" parent="."]
 position = Vector2(-20, -13)

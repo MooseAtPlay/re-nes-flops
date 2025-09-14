@@ -88,6 +88,15 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	
+	# Debug: Check what we're colliding with
+	if is_on_floor():
+		var bodies = get_slide_collision_count()
+		for i in range(bodies):
+			var collision = get_slide_collision(i)
+			var body = collision.get_collider()
+			if body and body.is_in_group("semisolid"):
+				print("DEBUG: Colliding with semisolid platform: ", body.name)
+	
 	# Update held bomb position if we have one
 	if held_bomb and bomb_marker:
 		# Use marker position, adjusting for direction
