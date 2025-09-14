@@ -103,9 +103,6 @@ func _physics_process(delta: float) -> void:
 			var body = collision.get_collider()
 			if body and body.is_in_group("semisolid"):
 				was_on_semisolid = true
-				print("DEBUG: Standing on semisolid platform: ", body.name)
-			elif body and body.is_in_group("floor"):
-				print("DEBUG: Standing on solid platform: ", body.name)
 	
 	# Update held bomb position if we have one
 	if held_bomb and bomb_marker:
@@ -185,9 +182,9 @@ func handle_semisolid_collision() -> void:
 	var is_moving_horizontally = abs(Input.get_axis("move_left", "move_right")) > 0.1
 	
 	# Enable semisolid collision when:
-	# 1. Moving down (falling) AND not trying to move horizontally - to land on platforms
-	# 2. Already standing on a semisolid platform - to stay on it (regardless of horizontal movement)
-	if (velocity.y > 0.1 and not is_moving_horizontally) or was_on_semisolid:
+	# 1. Moving down (falling) - to land on platforms from above
+	# 2. Standing on a semisolid platform - to stay on it
+	if velocity.y > 0.1 or was_on_semisolid:
 		# Enable collision with semisolid platforms (layer 2)
 		collision_mask = 3  # 1 (solid) + 2 (semisolid)
 	else:

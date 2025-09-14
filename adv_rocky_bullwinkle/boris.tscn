@@ -84,7 +84,6 @@ autoplay = "idle"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-1, 0)
 shape = SubResource("CapsuleShape2D_s41ie")
-one_way_collision = true
 
 [node name="BombMarker" type="Marker2D" parent="."]
 position = Vector2(-20, -13)
