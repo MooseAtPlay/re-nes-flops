@@ -39,6 +39,9 @@ func _physics_process(delta: float) -> void:
 	# Handle bending
 	handle_bend_input()
 
+	# Handle semisolid platform collision
+	handle_semisolid_collision()
+
 	# Get the input direction and handle movement (disabled when bending)
 	if not is_bending:
 		var direction := Input.get_axis("move_left", "move_right")
@@ -95,7 +98,9 @@ func _physics_process(delta: float) -> void:
 			var collision = get_slide_collision(i)
 			var body = collision.get_collider()
 			if body and body.is_in_group("semisolid"):
-				print("DEBUG: Colliding with semisolid platform: ", body.name)
+				print("DEBUG: Standing on semisolid platform: ", body.name)
+			elif body and body.is_in_group("floor"):
+				print("DEBUG: Standing on solid platform: ", body.name)
 	
 	# Update held bomb position if we have one
 	if held_bomb and bomb_marker:
@@ -168,6 +173,16 @@ func create_held_bomb() -> void:
 	is_holding_bomb = true
 	
 	print("Created and holding bomb")
+
+func handle_semisolid_collision() -> void:
+	"""Handle semisolid platform collision logic"""
+	# Only enable semisolid collision when moving downward and not jumping up
+	if velocity.y >= 0:  # Moving down or stationary
+		# Enable collision with semisolid platforms (layer 2)
+		collision_mask = 3  # 1 (solid) + 2 (semisolid)
+	else:
+		# Disable collision with semisolid platforms when moving up
+		collision_mask = 1  # Only solid platforms
 
 func handle_bend_input() -> void:
 	"""Handle bend input"""

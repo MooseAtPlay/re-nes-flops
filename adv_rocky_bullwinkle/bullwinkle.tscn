@@ -177,7 +177,7 @@ size = Vector2(20, 11)
 [node name="Bullwinkle" type="CharacterBody2D"]
 script = ExtResource("1_q6axh")
 collision_layer = 1
-collision_mask = 3
+collision_mask = 1
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_jgwg0")

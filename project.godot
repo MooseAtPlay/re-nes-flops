@@ -28,6 +28,11 @@ window/stretch/scale_mode="integer"
 
 bombs=""
 
+[layer_names]
+
+2d_physics/layer_1="Solid"
+2d_physics/layer_2="Semisolid"
+
 [input]
 
 move_right={
