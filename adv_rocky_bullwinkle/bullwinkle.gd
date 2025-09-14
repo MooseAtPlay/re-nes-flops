@@ -181,10 +181,13 @@ func create_held_bomb() -> void:
 
 func handle_semisolid_collision() -> void:
 	"""Handle semisolid platform collision logic"""
+	# Check if we're trying to move horizontally
+	var is_moving_horizontally = abs(Input.get_axis("move_left", "move_right")) > 0.1
+	
 	# Enable semisolid collision when:
-	# 1. Moving down (falling) - to land on platforms
-	# 2. Already standing on a semisolid platform - to stay on it
-	if velocity.y > 0.1 or was_on_semisolid:  # Small threshold to avoid jitter
+	# 1. Moving down (falling) AND not trying to move horizontally - to land on platforms
+	# 2. Already standing on a semisolid platform - to stay on it (regardless of horizontal movement)
+	if (velocity.y > 0.1 and not is_moving_horizontally) or was_on_semisolid:
 		# Enable collision with semisolid platforms (layer 2)
 		collision_mask = 3  # 1 (solid) + 2 (semisolid)
 	else:

@@ -32,7 +32,7 @@ position = Vector2(136, 192)
 position = Vector2(192, 192)
 
 [node name="Bullwinkle" parent="." instance=ExtResource("1_fsveu")]
-position = Vector2(544, 176)
+position = Vector2(392, 144)
 
 [node name="Camera2D" type="Camera2D" parent="Bullwinkle"]
 zoom = Vector2(3, 3)
