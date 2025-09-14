@@ -15,6 +15,11 @@ var throw_delay_timer: Timer
 # Player facing
 var player_facing_timer: Timer
 
+# AI Movement state
+var target_position: Vector2
+var has_target: bool = false
+var target_reassessment_timer: Timer
+
 func _ready() -> void:
 	# Call parent _ready first
 	super._ready()
@@ -32,6 +37,13 @@ func _ready() -> void:
 	player_facing_timer.timeout.connect(_on_player_facing_timeout)
 	add_child(player_facing_timer)
 	player_facing_timer.start()
+	
+	# Create a timer for reassessing target position
+	target_reassessment_timer = Timer.new()
+	target_reassessment_timer.wait_time = 1.0  # 1 second
+	target_reassessment_timer.timeout.connect(_on_target_reassessment_timeout)
+	add_child(target_reassessment_timer)
+	target_reassessment_timer.start()
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -76,6 +88,9 @@ func start_bomb_throw_sequence() -> void:
 	velocity = Vector2.ZERO
 	print("DEBUG: Boris velocity zeroed before creating bomb")
 	
+	# Clear current target since we're about to throw
+	has_target = false
+	
 	# Create and hold a bomb
 	create_held_bomb()
 	
@@ -115,7 +130,7 @@ func _on_player_facing_timeout() -> void:
 			animated_sprite.flip_h = false
 
 func handle_movement(delta: float) -> void:
-	"""Handle Boris movement toward player with minimum distance"""
+	"""Handle Boris movement using target-based AI"""
 	# Stop moving if holding a bomb
 	if is_holding_bomb:
 		velocity.x = move_toward(velocity.x, 0, MOVE_SPEED * 2 * delta)
@@ -127,28 +142,54 @@ func handle_movement(delta: float) -> void:
 		print("DEBUG: No player found for Boris movement")
 		return
 	
-	# Calculate distance to player
-	var distance_to_player = global_position.distance_to(player.global_position)
-	print("DEBUG: Distance to player: ", distance_to_player, " (MIN_DISTANCE: ", MIN_DISTANCE, ")")
+	# Choose a target position if we don't have one
+	if not has_target:
+		choose_target_position(player)
 	
-	# Move based on distance to player
-	if distance_to_player > MIN_DISTANCE:
-		# Too far away - move toward player
-		var direction_to_player = (player.global_position - global_position).normalized()
-		print("DEBUG: Moving toward player, direction: ", direction_to_player)
+	# Move toward target if we have one
+	if has_target:
+		var distance_to_target = global_position.distance_to(target_position)
+		print("DEBUG: Distance to target: ", distance_to_target, " Target: ", target_position)
 		
-		# Move toward player horizontally
-		velocity.x = direction_to_player.x * MOVE_SPEED
-		print("DEBUG: Set velocity.x to: ", velocity.x)
-	elif distance_to_player < MIN_DISTANCE * 0.8:  # Back up when within 80% of min distance
-		# Too close - back away from player
-		var direction_away_from_player = (global_position - player.global_position).normalized()
-		print("DEBUG: Backing away from player, direction: ", direction_away_from_player)
-		
-		# Move away from player horizontally
-		velocity.x = direction_away_from_player.x * MOVE_SPEED
-		print("DEBUG: Set velocity.x to: ", velocity.x)
+		if distance_to_target > 10:  # Small threshold to avoid jittering
+			# Move toward target
+			var direction_to_target = (target_position - global_position).normalized()
+			velocity.x = direction_to_target.x * MOVE_SPEED
+			print("DEBUG: Moving toward target, velocity.x: ", velocity.x)
+		else:
+			# Reached target - stop moving
+			velocity.x = move_toward(velocity.x, 0, MOVE_SPEED * 2 * delta)
+			print("DEBUG: Reached target, stopping. velocity.x: ", velocity.x)
+			has_target = false  # Clear target so we can choose a new one
+
+func choose_target_position(player: CharacterBody2D) -> void:
+	"""Choose a strategic target position relative to the player"""
+	var player_pos = player.global_position
+	var current_pos = global_position
+	var distance_to_player = current_pos.distance_to(player_pos)
+	
+	# Calculate ideal position based on current distance
+	if distance_to_player > MIN_DISTANCE * 1.2:  # Too far away
+		# Move closer to player, but not too close
+		var direction_to_player = (player_pos - current_pos).normalized()
+		target_position = player_pos - direction_to_player * MIN_DISTANCE
+		print("DEBUG: Too far from player, moving closer. Target: ", target_position)
+	elif distance_to_player < MIN_DISTANCE * 0.8:  # Too close
+		# Move away from player
+		var direction_away_from_player = (current_pos - player_pos).normalized()
+		target_position = current_pos + direction_away_from_player * (MIN_DISTANCE - distance_to_player)
+		print("DEBUG: Too close to player, backing away. Target: ", target_position)
 	else:
-		# At ideal distance - stop moving horizontally
-		velocity.x = move_toward(velocity.x, 0, MOVE_SPEED * 2 * delta)
-		print("DEBUG: At ideal distance, stopping. velocity.x: ", velocity.x)
+		# At good distance, choose a position slightly to the side
+		var side_direction = 1 if randf() > 0.5 else -1
+		target_position = player_pos + Vector2(side_direction * MIN_DISTANCE * 0.5, 0)
+		print("DEBUG: Good distance, choosing side position. Target: ", target_position)
+	
+	has_target = true
+
+func _on_target_reassessment_timeout() -> void:
+	"""Periodically reassess target position"""
+	if not is_holding_bomb and not is_throwing_bomb:
+		# Clear current target to force reassessment
+		has_target = false
+		print("DEBUG: Target reassessment timeout - clearing current target")
