@@ -85,9 +85,11 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_y82cj"]
 radius = 6.0
 
-[node name="Bomb" type="Area2D" groups=["bombs"]]
+[node name="Bomb" type="CharacterBody2D" groups=["bombs"]]
 script = ExtResource("1_1124j")
 armed_explode_time = 2.0
+collision_layer = 0
+collision_mask = 3
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(1, -6)
@@ -95,5 +97,11 @@ sprite_frames = SubResource("SpriteFrames_vbkeg")
 autoplay = "default"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = SubResource("CircleShape2D_y82cj")
+
+[node name="DamageArea" type="Area2D" parent="."]
+
+[node name="DamageAreaCollisionShape2D" type="CollisionShape2D" parent="DamageArea"]
 position = Vector2(0, 4)
 shape = SubResource("CircleShape2D_y82cj")

@@ -1,4 +1,4 @@
-extends Area2D
+extends CharacterBody2D
 
 enum BombState {
 	UNARMED,
@@ -9,6 +9,7 @@ enum BombState {
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
+@onready var damage_area: Area2D = $DamageArea
 
 @export var state: BombState = BombState.UNARMED
 @export var armed_explode_time: float = 2.0  # in seconds
@@ -16,7 +17,6 @@ enum BombState {
 var armed_timer: float = 0.0
 var has_damaged_player: bool = false
 var has_damaged_enemy: bool = false
-var velocity: Vector2 = Vector2.ZERO
 var is_held: bool = false
 var thrower: Node2D = null  # Reference to the character who threw this bomb
 var safe_period_timer: float = 0.0
@@ -41,7 +41,7 @@ func _ready() -> void:
 		print("ERROR: AnimatedSprite2D not found!")
 	
 	# Connect to body entered signal
-	body_entered.connect(_on_body_entered)
+	damage_area.body_entered.connect(_on_body_entered)
 	print("Bomb ready - Position: ", position, " State: ", state)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -59,7 +59,8 @@ func _process(delta: float) -> void:
 				# Apply friction to horizontal movement
 				velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
 
-			position += velocity * delta
+			# Use move_and_slide for proper physics collision
+			move_and_slide()
 		else:
 			# Non-thrown bomb: apply gravity directly to position (original behavior)
 			if not is_on_floor():
@@ -72,7 +73,7 @@ func _process(delta: float) -> void:
 			# Safe period over, transition to armed state
 			state = BombState.ARMED
 			armed_timer = 0.0
-			print("Bomb safe period ended, now armed")
+			print("Bomb safe period ended, now armed - Position: ", position, " Velocity: ", velocity, " On floor: ", is_on_floor())
 	
 	# Handle armed bomb timer
 	if state == BombState.ARMED:
@@ -83,7 +84,7 @@ func _process(delta: float) -> void:
 	
 	# Handle damage during exploding state
 	if state == BombState.EXPLODING:
-		var bodies = get_overlapping_bodies()
+		var bodies = damage_area.get_overlapping_bodies()
 		for body in bodies:
 			# Skip damage to the thrower
 			if body == thrower:
@@ -111,13 +112,6 @@ func _process(delta: float) -> void:
 				else:
 					print("ERROR: Boris does not have take_damage method")
 
-func is_on_floor() -> bool:
-	"""Check if bomb is touching something in the 'floor' group"""
-	var bodies = get_overlapping_bodies()
-	for body in bodies:
-		if body.is_in_group("floor"):
-			return true
-	return false
 
 func arm_bomb() -> void:
 	"""Arm the bomb so it can explode"""
