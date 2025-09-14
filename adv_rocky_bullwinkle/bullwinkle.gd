@@ -24,7 +24,13 @@ var is_bending: bool = false
 # Bomb pickup tracking
 var nearby_bombs: Array[Node2D] = []
 
+# Semisolid platform state tracking
+var was_on_semisolid: bool = false
+
 func _physics_process(delta: float) -> void:
+	# Handle semisolid platform collision FIRST
+	handle_semisolid_collision()
+	
 	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -38,9 +44,6 @@ func _physics_process(delta: float) -> void:
 	
 	# Handle bending
 	handle_bend_input()
-
-	# Handle semisolid platform collision
-	handle_semisolid_collision()
 
 	# Get the input direction and handle movement (disabled when bending)
 	if not is_bending:
@@ -91,13 +94,15 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	
-	# Debug: Check what we're colliding with
+	# Update semisolid platform state tracking
+	was_on_semisolid = false
 	if is_on_floor():
 		var bodies = get_slide_collision_count()
 		for i in range(bodies):
 			var collision = get_slide_collision(i)
 			var body = collision.get_collider()
 			if body and body.is_in_group("semisolid"):
+				was_on_semisolid = true
 				print("DEBUG: Standing on semisolid platform: ", body.name)
 			elif body and body.is_in_group("floor"):
 				print("DEBUG: Standing on solid platform: ", body.name)
@@ -176,12 +181,14 @@ func create_held_bomb() -> void:
 
 func handle_semisolid_collision() -> void:
 	"""Handle semisolid platform collision logic"""
-	# Only enable semisolid collision when moving downward and not jumping up
-	if velocity.y >= 0:  # Moving down or stationary
+	# Enable semisolid collision when:
+	# 1. Moving down (falling) - to land on platforms
+	# 2. Already standing on a semisolid platform - to stay on it
+	if velocity.y > 0.1 or was_on_semisolid:  # Small threshold to avoid jitter
 		# Enable collision with semisolid platforms (layer 2)
 		collision_mask = 3  # 1 (solid) + 2 (semisolid)
 	else:
-		# Disable collision with semisolid platforms when moving up
+		# Disable collision with semisolid platforms when moving up or horizontally
 		collision_mask = 1  # Only solid platforms
 
 func handle_bend_input() -> void:
