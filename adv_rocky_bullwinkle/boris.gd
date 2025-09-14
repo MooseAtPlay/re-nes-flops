@@ -192,8 +192,6 @@ func _on_target_reassessment_timeout() -> void:
 
 func handle_semisolid_collision() -> void:
 	"""Handle semisolid platform collision logic"""
-	# Check if we're trying to move horizontally
-	var is_moving_horizontally = abs(velocity.x) > 0.1
 	
 	# Enable semisolid collision when:
 	# 1. Moving down (falling) - to land on platforms from above
