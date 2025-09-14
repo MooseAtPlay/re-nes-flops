@@ -106,6 +106,9 @@ func throw_bomb() -> void:
 		THROW_VERTICAL_VELOCITY + vertical_variance
 	)
 	
+	# Set the thrower and start safe period
+	held_bomb.set_thrown_by(self)
+	
 	# Clear held bomb reference
 	held_bomb = null
 	

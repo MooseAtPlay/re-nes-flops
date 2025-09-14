@@ -3,6 +3,7 @@ extends Area2D
 enum BombState {
 	UNARMED,
 	ARMED,
+	THROWN_SAFE,  # Safe period after being thrown - won't damage thrower
 	EXPLODING
 }
 
@@ -17,6 +18,9 @@ var has_damaged_player: bool = false
 var has_damaged_enemy: bool = false
 var velocity: Vector2 = Vector2.ZERO
 var is_held: bool = false
+var thrower: Node2D = null  # Reference to the character who threw this bomb
+var safe_period_timer: float = 0.0
+const SAFE_PERIOD_DURATION = 0.5  # Safe period in seconds
 const GRAVITY = 360.0
 const FRICTION = 800.0  # Friction when sliding on ground
 
@@ -61,6 +65,15 @@ func _process(delta: float) -> void:
 			if not is_on_floor():
 				position.y += GRAVITY * delta
 	
+	# Handle safe period timer for thrown bombs
+	if state == BombState.THROWN_SAFE:
+		safe_period_timer += delta
+		if safe_period_timer >= SAFE_PERIOD_DURATION:
+			# Safe period over, transition to armed state
+			state = BombState.ARMED
+			armed_timer = 0.0
+			print("Bomb safe period ended, now armed")
+	
 	# Handle armed bomb timer
 	if state == BombState.ARMED:
 		armed_timer += delta
@@ -72,6 +85,10 @@ func _process(delta: float) -> void:
 	if state == BombState.EXPLODING:
 		var bodies = get_overlapping_bodies()
 		for body in bodies:
+			# Skip damage to the thrower
+			if body == thrower:
+				continue
+			
 			# Damage player if not already damaged
 			if body.name == "Bullwinkle" and not has_damaged_player:
 				print("Bullwinkle hit by exploding bomb!")
@@ -118,6 +135,13 @@ func set_held(held: bool) -> void:
 	else:
 		print("Bomb is being held")
 
+func set_thrown_by(character: Node2D) -> void:
+	"""Set the character who threw this bomb and start safe period"""
+	thrower = character
+	state = BombState.THROWN_SAFE
+	safe_period_timer = 0.0
+	print("Bomb thrown by: ", character.name, " - Safe period started")
+
 func explode() -> void:
 	"""Explode the bomb"""
 	print("Bomb exploding! State changing to EXPLODING")
@@ -144,6 +168,11 @@ func explode() -> void:
 func _on_body_entered(body: Node2D) -> void:
 	"""Handle when a body enters the bomb area"""
 	print("Body entered bomb area: ", body.name, " State: ", state)
+	
+	# Skip collision with thrower during safe period
+	if state == BombState.THROWN_SAFE and body == thrower:
+		return
+	
 	if state == BombState.ARMED:
 		# Armed bombs explode when touched by non-floor objects
 		if not body.is_in_group("floor"):
