@@ -20,6 +20,9 @@ var target_position: Vector2
 var has_target: bool = false
 var target_reassessment_timer: Timer
 
+# Semisolid platform state tracking
+var was_on_semisolid: bool = false
+
 func _ready() -> void:
 	# Call parent _ready first
 	super._ready()
@@ -46,6 +49,9 @@ func _ready() -> void:
 	target_reassessment_timer.start()
 
 func _physics_process(delta: float) -> void:
+	# Handle semisolid platform collision FIRST
+	handle_semisolid_collision()
+	
 	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -58,6 +64,16 @@ func _physics_process(delta: float) -> void:
 	handle_animations()
 
 	move_and_slide()
+	
+	# Update semisolid platform state tracking
+	was_on_semisolid = false
+	if is_on_floor():
+		var bodies = get_slide_collision_count()
+		for i in range(bodies):
+			var collision = get_slide_collision(i)
+			var body = collision.get_collider()
+			if body and body.is_in_group("semisolid"):
+				was_on_semisolid = true
 
 func handle_animations() -> void:
 	"""Handle Boris's animations"""
@@ -173,3 +189,18 @@ func _on_target_reassessment_timeout() -> void:
 	if not is_holding_bomb and not is_throwing_bomb:
 		# Clear current target to force reassessment
 		has_target = false
+
+func handle_semisolid_collision() -> void:
+	"""Handle semisolid platform collision logic"""
+	# Check if we're trying to move horizontally
+	var is_moving_horizontally = abs(velocity.x) > 0.1
+	
+	# Enable semisolid collision when:
+	# 1. Moving down (falling) - to land on platforms from above
+	# 2. Standing on a semisolid platform - to stay on it
+	if velocity.y > 0.1 or was_on_semisolid:
+		# Enable collision with semisolid platforms (layer 2)
+		collision_mask = 3  # 1 (solid) + 2 (semisolid)
+	else:
+		# Disable collision with semisolid platforms when moving up or horizontally
+		collision_mask = 1  # Only solid platforms
