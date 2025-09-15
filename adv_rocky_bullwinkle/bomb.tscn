@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bdutr45f50vaj"]
+[gd_scene load_steps=14 format=3 uid="uid://bdutr45f50vaj"]
 
 [ext_resource type="Script" uid="uid://bdsjbif8sxvwq" path="res://adv_rocky_bullwinkle/bomb.gd" id="1_1124j"]
 [ext_resource type="Texture2D" uid="uid://dk0mv42qf8ls4" path="res://adv_rocky_bullwinkle/assets/bomb.png" id="1_rkggv"]
@@ -86,13 +86,12 @@ animations = [{
 radius = 6.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_damage"]
-radius = 20.0
+radius = 8.944272
 
 [node name="Bomb" type="CharacterBody2D" groups=["bombs"]]
-script = ExtResource("1_1124j")
-armed_explode_time = 2.0
 collision_layer = 0
 collision_mask = 3
+script = ExtResource("1_1124j")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(1, -6)
@@ -105,7 +104,6 @@ shape = SubResource("CircleShape2D_y82cj")
 
 [node name="DamageArea" type="Area2D" parent="."]
 collision_layer = 0
-collision_mask = 1
 monitoring = false
 monitorable = false
 

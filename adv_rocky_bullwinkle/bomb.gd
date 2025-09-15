@@ -86,21 +86,19 @@ func _process(delta: float) -> void:
 			# Safe period over, transition to armed state
 			state = BombState.ARMED
 			armed_timer = 0.0
+			print("DEBUG: Safe period over, transitioning to armed state")
 	
 	# Handle armed bomb timer
 	if state == BombState.ARMED:
 		armed_timer += delta
 		if armed_timer >= armed_explode_time:
+			print("DEBUG: Armed timer over, exploding bomb")
 			explode()
 	
 	# Handle damage during exploding state
 	if state == BombState.EXPLODING:
 		var bodies = damage_area.get_overlapping_bodies()
 		for body in bodies:
-			# Skip damage to the thrower
-			if body == thrower:
-				continue
-			
 			# Damage player if not already damaged
 			if body.name == "Bullwinkle" and not has_damaged_player:
 				has_damaged_player = true
@@ -118,11 +116,13 @@ func _process(delta: float) -> void:
 
 func arm_bomb() -> void:
 	"""Arm the bomb so it can explode"""
+	print("DEBUG: Arming bomb")
 	state = BombState.ARMED
 	armed_timer = 0.0
 
 func set_held(held: bool) -> void:
 	"""Set whether the bomb is being held by the player"""
+	print("DEBUG: Setting held: ", held)
 	is_held = held
 	if not held:
 		# When released, clear any accumulated velocity from gravity
@@ -130,13 +130,17 @@ func set_held(held: bool) -> void:
 
 func set_thrown_by(character: Node2D) -> void:
 	"""Set the character who threw this bomb and start safe period"""
+	print("DEBUG: Setting thrown by: ", character)
 	thrower = character
 	state = BombState.THROWN_SAFE
+	print("DEBUG: Setting safe period timer: ", safe_period_timer)
 	safe_period_timer = 0.0
 
 func explode() -> void:
 	"""Explode the bomb"""
+	print("DEBUG: Exploding bomb")
 	state = BombState.EXPLODING
+	print("DEBUG: Setting armed timer: ", armed_timer)
 	armed_timer = 0.0
 	has_damaged_player = false
 	has_damaged_enemy = false
@@ -163,27 +167,36 @@ func explode() -> void:
 
 func check_immediate_damage() -> void:
 	"""Check for immediate damage when bomb explodes"""
+	print("DEBUG: Checking immediate damage")
 	if not damage_area:
+		print("DEBUG: No damage area")
 		return
 		
 	var bodies = damage_area.get_overlapping_bodies()
+	print("DEBUG: Bodies: ", bodies)
 	for body in bodies:
+		print("DEBUG: Body: ", body)
 		# Skip damage to the thrower
 		if body == thrower:
+			print("DEBUG: Skipping damage to thrower")
 			continue
 		
 		# Damage player if not already damaged
 		if body.name == "Bullwinkle" and not has_damaged_player:
+			print("DEBUG: Damaging player")
 			has_damaged_player = true
 			# Get the game state and damage the player
 			var game_state = get_node("/root/AdvRockyBullwinkle")
 			if game_state:
+				print("DEBUG: Bullwinkle taking damage")
 				game_state.take_damage(1)
 		
 		# Damage enemy if not already damaged
 		elif body.name == "Boris" and not has_damaged_enemy:
+			print("DEBUG: Damaging enemy")
 			has_damaged_enemy = true
 			if body.has_method("take_damage"):
+				print("DEBUG: Enemy taking damage")
 				body.take_damage(1)
 
 func _on_body_entered(body: Node2D) -> void:
