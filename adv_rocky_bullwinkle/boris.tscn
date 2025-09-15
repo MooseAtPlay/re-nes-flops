@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dkoxch7tm6o2x"]
+[gd_scene load_steps=12 format=3 uid="uid://dkoxch7tm6o2x"]
 
 [ext_resource type="Texture2D" uid="uid://bhcxh36sud8hh" path="res://adv_rocky_bullwinkle/assets/boris.png" id="1_0sv5q"]
 [ext_resource type="Script" uid="uid://ba4x3eakk0pil" path="res://adv_rocky_bullwinkle/boris.gd" id="1_1gwdu"]
@@ -22,6 +22,10 @@ region = Rect2(36, 0, 36, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_yvvhp"]
 atlas = ExtResource("1_0sv5q")
 region = Rect2(72, 0, 36, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s41ie"]
+atlas = ExtResource("1_0sv5q")
+region = Rect2(36, 0, 36, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kab7c"]
 atlas = ExtResource("1_0sv5q")
@@ -61,6 +65,14 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_s41ie")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_kab7c")
 }],
 "loop": false,
@@ -72,13 +84,12 @@ animations = [{
 radius = 8.0
 
 [node name="Boris" type="CharacterBody2D"]
-script = ExtResource("1_1gwdu")
-collision_layer = 1
 collision_mask = 3
+script = ExtResource("1_1gwdu")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_16ha7")
-animation = &"hold_bomb"
+animation = &"jump"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

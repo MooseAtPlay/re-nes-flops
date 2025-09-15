@@ -20,6 +20,9 @@ var target_position: Vector2
 var has_target: bool = false
 var target_reassessment_timer: Timer
 
+# Jump timer
+var jump_timer: Timer
+
 # Semisolid platform state tracking
 var was_on_semisolid: bool = false
 
@@ -47,6 +50,13 @@ func _ready() -> void:
 	target_reassessment_timer.timeout.connect(_on_target_reassessment_timeout)
 	add_child(target_reassessment_timer)
 	target_reassessment_timer.start()
+	
+	# Create a timer for jumping
+	jump_timer = Timer.new()
+	jump_timer.wait_time = 1.0  # 1 second
+	jump_timer.timeout.connect(_on_jump_timer_timeout)
+	add_child(jump_timer)
+	jump_timer.start()
 
 func _physics_process(delta: float) -> void:
 	# Handle semisolid platform collision FIRST
@@ -84,6 +94,10 @@ func handle_animations() -> void:
 		# Play hold_bomb animation when holding a bomb
 		if animated_sprite.animation != "hold_bomb":
 			animated_sprite.play("hold_bomb")
+	elif not is_on_floor():
+		# Play jump animation when in air
+		if animated_sprite.animation != "jump":
+			animated_sprite.play("jump")
 	else:
 		# Play idle animation when not doing anything else
 		if animated_sprite.animation != "idle":
@@ -202,3 +216,13 @@ func handle_semisolid_collision() -> void:
 	else:
 		# Disable collision with semisolid platforms when moving up or horizontally
 		collision_mask = 1  # Only solid platforms
+
+func _on_jump_timer_timeout() -> void:
+	"""Handle jump timer timeout - make Boris jump if conditions are met"""
+	# Only jump if:
+	# 1. On the floor
+	# 2. Not currently throwing a bomb
+	# 3. Not holding a bomb
+	if is_on_floor() and not is_throwing_bomb and not is_holding_bomb:
+		velocity.y = JUMP_VELOCITY
+		print("Boris jumped!")
