@@ -101,6 +101,10 @@ position = Vector2(0, 4)
 shape = SubResource("CircleShape2D_y82cj")
 
 [node name="DamageArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+monitoring = false
+monitorable = false
 
 [node name="DamageAreaCollisionShape2D" type="CollisionShape2D" parent="DamageArea"]
 position = Vector2(0, 4)

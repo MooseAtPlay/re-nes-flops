@@ -42,6 +42,12 @@ func _ready() -> void:
 	
 	# Connect to body entered signal
 	damage_area.body_entered.connect(_on_body_entered)
+	
+	# Disable damage area initially - only enable when exploding
+	if damage_area:
+		damage_area.monitoring = false
+		print("Damage area monitoring disabled initially")
+	
 	print("Bomb ready - Position: ", position, " State: ", state)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -85,9 +91,12 @@ func _process(delta: float) -> void:
 	# Handle damage during exploding state
 	if state == BombState.EXPLODING:
 		var bodies = damage_area.get_overlapping_bodies()
+		print("Bomb exploding - detected ", bodies.size(), " overlapping bodies")
 		for body in bodies:
+			print("Overlapping body: ", body.name, " Type: ", body.get_class())
 			# Skip damage to the thrower
 			if body == thrower:
+				print("Skipping damage to thrower: ", body.name)
 				continue
 			
 			# Damage player if not already damaged
@@ -146,6 +155,11 @@ func explode() -> void:
 	
 	# Stop all movement
 	velocity = Vector2.ZERO
+	
+	# Enable damage area monitoring
+	if damage_area:
+		damage_area.monitoring = true
+		print("Damage area monitoring enabled")
 	
 	# Clear held bomb reference if this bomb was being held
 	var player = get_node("/root/AdvRockyBullwinkle/Bullwinkle")
