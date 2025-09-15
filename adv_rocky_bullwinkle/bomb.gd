@@ -24,6 +24,9 @@ const SAFE_PERIOD_DURATION = 0.5  # Safe period in seconds
 const GRAVITY = 360.0
 const FRICTION = 800.0  # Friction when sliding on ground
 
+# Semisolid platform state tracking
+var was_on_semisolid: bool = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	print("Bomb _ready() called - State: ", state)
@@ -52,6 +55,9 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	# Handle semisolid platform collision FIRST
+	handle_semisolid_collision()
+	
 	# Handle movement based on velocity and gravity
 	if state != BombState.EXPLODING and not is_held:
 		# Check if bomb has been thrown (has velocity)
@@ -67,6 +73,16 @@ func _process(delta: float) -> void:
 
 			# Use move_and_slide for proper physics collision
 			move_and_slide()
+			
+			# Update semisolid platform state tracking
+			was_on_semisolid = false
+			if is_on_floor():
+				var bodies = get_slide_collision_count()
+				for i in range(bodies):
+					var collision = get_slide_collision(i)
+					var body = collision.get_collider()
+					if body and body.is_in_group("semisolid"):
+						was_on_semisolid = true
 		else:
 			# Non-thrown bomb: apply gravity directly to position (original behavior)
 			if not is_on_floor():
@@ -241,3 +257,16 @@ func _on_animation_finished() -> void:
 		# When exploding animation finishes, free the bomb
 		print("Exploding animation finished, freeing bomb")
 		queue_free()
+
+func handle_semisolid_collision() -> void:
+	"""Handle semisolid platform collision logic"""
+	
+	# Enable semisolid collision when:
+	# 1. Moving down (falling) - to land on platforms from above
+	# 2. Standing on a semisolid platform - to stay on it
+	if velocity.y > 0.1 or was_on_semisolid:
+		# Enable collision with semisolid platforms (layer 2)
+		collision_mask = 3  # 1 (solid) + 2 (semisolid)
+	else:
+		# Disable collision with semisolid platforms when moving up or horizontally
+		collision_mask = 1  # Only solid platforms
