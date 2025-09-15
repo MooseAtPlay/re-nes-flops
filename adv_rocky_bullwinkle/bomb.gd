@@ -106,8 +106,9 @@ func _process(delta: float) -> void:
 				# Get the game state and damage the player
 				var game_state = get_node("/root/AdvRockyBullwinkle")
 				if game_state:
+					print("Game state found, current health: ", game_state.health)
 					game_state.take_damage(1)
-					print("Player damaged by bomb")
+					print("Player damaged by bomb, new health: ", game_state.health)
 				else:
 					print("ERROR: Could not find game state to damage player")
 			
@@ -172,6 +173,47 @@ func explode() -> void:
 		print("Playing exploding animation")
 	else:
 		print("ERROR: Cannot play exploding animation - AnimatedSprite2D not found!")
+	
+	# Force immediate damage check after a small delay to ensure area detection works
+	await get_tree().process_frame
+	check_immediate_damage()
+
+func check_immediate_damage() -> void:
+	"""Check for immediate damage when bomb explodes"""
+	if not damage_area:
+		return
+		
+	var bodies = damage_area.get_overlapping_bodies()
+	print("Immediate damage check - detected ", bodies.size(), " overlapping bodies")
+	for body in bodies:
+		print("Immediate check - Overlapping body: ", body.name, " Type: ", body.get_class())
+		# Skip damage to the thrower
+		if body == thrower:
+			print("Skipping immediate damage to thrower: ", body.name)
+			continue
+		
+		# Damage player if not already damaged
+		if body.name == "Bullwinkle" and not has_damaged_player:
+			print("IMMEDIATE: Bullwinkle hit by exploding bomb!")
+			has_damaged_player = true
+			# Get the game state and damage the player
+			var game_state = get_node("/root/AdvRockyBullwinkle")
+			if game_state:
+				print("IMMEDIATE: Game state found, current health: ", game_state.health)
+				game_state.take_damage(1)
+				print("IMMEDIATE: Player damaged by bomb, new health: ", game_state.health)
+			else:
+				print("ERROR: Could not find game state to damage player")
+		
+		# Damage enemy if not already damaged
+		elif body.name == "Boris" and not has_damaged_enemy:
+			print("IMMEDIATE: Boris hit by exploding bomb!")
+			has_damaged_enemy = true
+			if body.has_method("take_damage"):
+				body.take_damage(1)
+				print("IMMEDIATE: Boris damaged by bomb")
+			else:
+				print("ERROR: Boris does not have take_damage method")
 
 func _on_body_entered(body: Node2D) -> void:
 	"""Handle when a body enters the bomb area"""

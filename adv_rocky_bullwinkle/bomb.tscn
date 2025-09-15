@@ -85,6 +85,9 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_y82cj"]
 radius = 6.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_damage"]
+radius = 20.0
+
 [node name="Bomb" type="CharacterBody2D" groups=["bombs"]]
 script = ExtResource("1_1124j")
 armed_explode_time = 2.0
@@ -108,4 +111,4 @@ monitorable = false
 
 [node name="DamageAreaCollisionShape2D" type="CollisionShape2D" parent="DamageArea"]
 position = Vector2(0, 4)
-shape = SubResource("CircleShape2D_y82cj")
+shape = SubResource("CircleShape2D_damage")
