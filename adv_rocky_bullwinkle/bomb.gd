@@ -29,19 +29,13 @@ var was_on_semisolid: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	print("Bomb _ready() called - State: ", state)
-	
 	# Check if animated_sprite exists
 	if animated_sprite:
-		print("AnimatedSprite2D found, connecting signals")
 		# Connect to animation finished signal
 		animated_sprite.animation_finished.connect(_on_animation_finished)
 		
 		# Start with default animation
 		animated_sprite.play("default")
-		print("Playing default animation")
-	else:
-		print("ERROR: AnimatedSprite2D not found!")
 	
 	# Connect to body entered signal
 	damage_area.body_entered.connect(_on_body_entered)
@@ -49,9 +43,6 @@ func _ready() -> void:
 	# Disable damage area initially - only enable when exploding
 	if damage_area:
 		damage_area.monitoring = false
-		print("Damage area monitoring disabled initially")
-	
-	print("Bomb ready - Position: ", position, " State: ", state)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -95,53 +86,38 @@ func _process(delta: float) -> void:
 			# Safe period over, transition to armed state
 			state = BombState.ARMED
 			armed_timer = 0.0
-			print("Bomb safe period ended, now armed - Position: ", position, " Velocity: ", velocity, " On floor: ", is_on_floor())
 	
 	# Handle armed bomb timer
 	if state == BombState.ARMED:
 		armed_timer += delta
 		if armed_timer >= armed_explode_time:
-			print("Bomb timer expired, exploding!")
 			explode()
 	
 	# Handle damage during exploding state
 	if state == BombState.EXPLODING:
 		var bodies = damage_area.get_overlapping_bodies()
-		print("Bomb exploding - detected ", bodies.size(), " overlapping bodies")
 		for body in bodies:
-			print("Overlapping body: ", body.name, " Type: ", body.get_class())
 			# Skip damage to the thrower
 			if body == thrower:
-				print("Skipping damage to thrower: ", body.name)
 				continue
 			
 			# Damage player if not already damaged
 			if body.name == "Bullwinkle" and not has_damaged_player:
-				print("Bullwinkle hit by exploding bomb!")
 				has_damaged_player = true
 				# Get the game state and damage the player
 				var game_state = get_node("/root/AdvRockyBullwinkle")
 				if game_state:
-					print("Game state found, current health: ", game_state.health)
 					game_state.take_damage(1)
-					print("Player damaged by bomb, new health: ", game_state.health)
-				else:
-					print("ERROR: Could not find game state to damage player")
 			
 			# Damage enemy if not already damaged
 			elif body.name == "Boris" and not has_damaged_enemy:
-				print("Boris hit by exploding bomb!")
 				has_damaged_enemy = true
 				if body.has_method("take_damage"):
 					body.take_damage(1)
-					print("Boris damaged by bomb")
-				else:
-					print("ERROR: Boris does not have take_damage method")
 
 
 func arm_bomb() -> void:
 	"""Arm the bomb so it can explode"""
-	print("Bomb armed!")
 	state = BombState.ARMED
 	armed_timer = 0.0
 
@@ -151,20 +127,15 @@ func set_held(held: bool) -> void:
 	if not held:
 		# When released, clear any accumulated velocity from gravity
 		velocity = Vector2.ZERO
-		print("Bomb released from hold")
-	else:
-		print("Bomb is being held")
 
 func set_thrown_by(character: Node2D) -> void:
 	"""Set the character who threw this bomb and start safe period"""
 	thrower = character
 	state = BombState.THROWN_SAFE
 	safe_period_timer = 0.0
-	print("Bomb thrown by: ", character.name, " - Safe period started")
 
 func explode() -> void:
 	"""Explode the bomb"""
-	print("Bomb exploding! State changing to EXPLODING")
 	state = BombState.EXPLODING
 	armed_timer = 0.0
 	has_damaged_player = false
@@ -176,7 +147,6 @@ func explode() -> void:
 	# Enable damage area monitoring
 	if damage_area:
 		damage_area.monitoring = true
-		print("Damage area monitoring enabled")
 	
 	# Clear held bomb reference if this bomb was being held
 	var player = get_node("/root/AdvRockyBullwinkle/Bullwinkle")
@@ -186,9 +156,6 @@ func explode() -> void:
 	# Change to exploding animation
 	if animated_sprite:
 		animated_sprite.play("exploding")
-		print("Playing exploding animation")
-	else:
-		print("ERROR: Cannot play exploding animation - AnimatedSprite2D not found!")
 	
 	# Force immediate damage check after a small delay to ensure area detection works
 	await get_tree().process_frame
@@ -200,41 +167,27 @@ func check_immediate_damage() -> void:
 		return
 		
 	var bodies = damage_area.get_overlapping_bodies()
-	print("Immediate damage check - detected ", bodies.size(), " overlapping bodies")
 	for body in bodies:
-		print("Immediate check - Overlapping body: ", body.name, " Type: ", body.get_class())
 		# Skip damage to the thrower
 		if body == thrower:
-			print("Skipping immediate damage to thrower: ", body.name)
 			continue
 		
 		# Damage player if not already damaged
 		if body.name == "Bullwinkle" and not has_damaged_player:
-			print("IMMEDIATE: Bullwinkle hit by exploding bomb!")
 			has_damaged_player = true
 			# Get the game state and damage the player
 			var game_state = get_node("/root/AdvRockyBullwinkle")
 			if game_state:
-				print("IMMEDIATE: Game state found, current health: ", game_state.health)
 				game_state.take_damage(1)
-				print("IMMEDIATE: Player damaged by bomb, new health: ", game_state.health)
-			else:
-				print("ERROR: Could not find game state to damage player")
 		
 		# Damage enemy if not already damaged
 		elif body.name == "Boris" and not has_damaged_enemy:
-			print("IMMEDIATE: Boris hit by exploding bomb!")
 			has_damaged_enemy = true
 			if body.has_method("take_damage"):
 				body.take_damage(1)
-				print("IMMEDIATE: Boris damaged by bomb")
-			else:
-				print("ERROR: Boris does not have take_damage method")
 
 func _on_body_entered(body: Node2D) -> void:
 	"""Handle when a body enters the bomb area"""
-	print("Body entered bomb area: ", body.name, " State: ", state)
-	
 	# Skip collision with thrower during safe period
 	if state == BombState.THROWN_SAFE and body == thrower:
 		return
@@ -242,20 +195,13 @@ func _on_body_entered(body: Node2D) -> void:
 	if state == BombState.ARMED:
 		# Armed bombs explode when touched by non-floor objects
 		if not body.is_in_group("floor"):
-			print("Armed bomb touched, exploding!")
 			explode()
 		
 
 func _on_animation_finished() -> void:
 	"""Handle when animation finishes"""
-	if animated_sprite:
-		print("Animation finished: ", animated_sprite.animation)
-	else:
-		print("Animation finished: No sprite")
-	
 	if state == BombState.EXPLODING:
 		# When exploding animation finishes, free the bomb
-		print("Exploding animation finished, freeing bomb")
 		queue_free()
 
 func handle_semisolid_collision() -> void:

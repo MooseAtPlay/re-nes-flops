@@ -225,4 +225,3 @@ func _on_jump_timer_timeout() -> void:
 	# 3. Not holding a bomb
 	if is_on_floor() and not is_throwing_bomb and not is_holding_bomb:
 		velocity.y = JUMP_VELOCITY
-		print("Boris jumped!")

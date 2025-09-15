@@ -173,8 +173,6 @@ func create_held_bomb() -> void:
 	
 	# Set holding state for animation
 	is_holding_bomb = true
-	
-	print("Created and holding bomb")
 
 func handle_semisolid_collision() -> void:
 	"""Handle semisolid platform collision logic"""
@@ -202,7 +200,6 @@ func handle_bend_input() -> void:
 func start_bending() -> void:
 	"""Start bending animation and check for bomb pickup"""
 	is_bending = true
-	print("Started bending")
 	
 	# Check for bomb pickup
 	check_bomb_pickup()
@@ -210,7 +207,6 @@ func start_bending() -> void:
 func stop_bending() -> void:
 	"""Stop bending animation"""
 	is_bending = false
-	print("Stopped bending")
 
 func check_bomb_pickup() -> void:
 	"""Check if character is colliding with an unarmed bomb and pick it up"""
@@ -226,20 +222,16 @@ func pickup_bomb(bomb: Node2D) -> void:
 	var game_state = get_node("/root/AdvRockyBullwinkle")
 	if game_state:
 		game_state.add_bombs(1)
-		print("Picked up bomb! Total bombs: ", game_state.bombs)
 	
 	# Free the bomb node
 	bomb.queue_free()
-	print("Bomb picked up and removed")
 
 func _on_bomb_checker_area_entered(area: Area2D) -> void:
 	"""Handle when a bomb enters the bomb checker area"""
 	if area.is_in_group("bombs"):
 		nearby_bombs.append(area)
-		print("Bomb entered pickup range: ", area.name)
 
 func _on_bomb_checker_area_exited(area: Area2D) -> void:
 	"""Handle when a bomb exits the bomb checker area"""
 	if area.is_in_group("bombs"):
 		nearby_bombs.erase(area)
-		print("Bomb left pickup range: ", area.name)

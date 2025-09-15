@@ -83,8 +83,6 @@ func create_held_bomb() -> void:
 	
 	# Set holding state for animation
 	is_holding_bomb = true
-	
-	print("Created and holding bomb")
 
 func throw_bomb() -> void:
 	"""Throw the held bomb"""
@@ -116,8 +114,6 @@ func throw_bomb() -> void:
 	is_holding_bomb = false
 	is_throwing_bomb = true
 	animated_sprite.play("throw_bomb")
-	
-	print("Threw bomb")
 
 func clear_held_bomb() -> void:
 	"""Clear the held bomb reference (called when bomb explodes while held)"""
@@ -128,13 +124,10 @@ func clear_held_bomb() -> void:
 	# Clear bomb states and let animation system return to appropriate animation
 	is_holding_bomb = false
 	is_throwing_bomb = false
-	
-	print("Cleared held bomb (exploded while held)")
 
 func _on_animation_finished() -> void:
 	"""Handle when animation finishes"""
 	if animated_sprite and animated_sprite.animation == "throw_bomb":
 		# Throw animation finished, return to normal animation state
 		is_throwing_bomb = false
-		print("Throw bomb animation finished - is_throwing_bomb set to false")
 
