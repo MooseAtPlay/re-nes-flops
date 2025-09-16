@@ -60,8 +60,23 @@ func _process(delta: float) -> void:
 			# Apply friction to horizontal movement
 			velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
 
-		# Use move_and_slide for proper physics collision
-		move_and_slide()
+		# Use custom collision handling during safe period
+		if state == BombState.THROWN_SAFE:
+			# During safe period, move without colliding with thrower
+			var collision_info = move_and_collide(velocity * delta)
+			if collision_info:
+				var collider = collision_info.get_collider()
+				# If colliding with thrower, ignore the collision and continue moving
+				if collider == thrower:
+					print("DEBUG: Bomb colliding with thrower during safe period, ignoring collision")
+					# Move past the thrower by continuing with velocity
+					global_position += velocity * delta
+				else:
+					# Normal collision with platforms
+					velocity = velocity.slide(collision_info.get_normal())
+		else:
+			# Normal collision handling for other states
+			move_and_slide()
 		
 		# Update semisolid platform state tracking
 		was_on_semisolid = false
@@ -78,9 +93,9 @@ func _process(delta: float) -> void:
 		safe_period_timer += delta
 		if safe_period_timer >= SAFE_PERIOD_DURATION:
 			# Safe period over, transition to armed state
+			print("DEBUG: Safe period over, setting to armed state")
 			state = BombState.ARMED
 			armed_timer = 0.0
-			print("DEBUG: Safe period over, transitioning to armed state")
 	
 	# Handle armed bomb timer
 	if state == BombState.ARMED:
@@ -110,7 +125,7 @@ func _process(delta: float) -> void:
 
 func arm_bomb() -> void:
 	"""Arm the bomb so it can explode"""
-	print("DEBUG: Arming bomb")
+	print("DEBUG: Setting armed state")
 	state = BombState.ARMED
 	armed_timer = 0.0
 
@@ -126,13 +141,14 @@ func set_thrown_by(character: Node2D) -> void:
 	"""Set the character who threw this bomb and start safe period"""
 	print("DEBUG: Setting thrown by: ", character)
 	thrower = character
+	print("DEBUG: Setting thrown safe state")
 	state = BombState.THROWN_SAFE
 	print("DEBUG: Setting safe period timer: ", safe_period_timer)
 	safe_period_timer = 0.0
 
 func explode() -> void:
 	"""Explode the bomb"""
-	print("DEBUG: Exploding bomb")
+	print("DEBUG: Setting exploding state")
 	state = BombState.EXPLODING
 	print("DEBUG: Setting armed timer: ", armed_timer)
 	armed_timer = 0.0

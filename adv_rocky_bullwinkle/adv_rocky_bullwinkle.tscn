@@ -29,7 +29,7 @@ tile_set = ExtResource("2_oa7qo")
 position = Vector2(144, 184)
 
 [node name="Bullwinkle" parent="." instance=ExtResource("1_fsveu")]
-position = Vector2(72, 176)
+position = Vector2(208, 176)
 
 [node name="Camera2D" type="Camera2D" parent="Bullwinkle"]
 zoom = Vector2(3, 3)
