@@ -51,33 +51,27 @@ func _process(delta: float) -> void:
 	
 	# Handle movement based on velocity and gravity
 	if state != BombState.EXPLODING and not is_held:
-		# Check if bomb has been thrown (has velocity)
-		if velocity != Vector2.ZERO:
-			# Thrown bomb: apply gravity to velocity and move by velocity
-			if not is_on_floor():
-				velocity.y += GRAVITY * delta
-			else:
-				# When on floor, set vertical velocity to 0 and apply friction to horizontal velocity
-				velocity.y = 0.0
-				# Apply friction to horizontal movement
-				velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
-
-			# Use move_and_slide for proper physics collision
-			move_and_slide()
-			
-			# Update semisolid platform state tracking
-			was_on_semisolid = false
-			if is_on_floor():
-				var bodies = get_slide_collision_count()
-				for i in range(bodies):
-					var collision = get_slide_collision(i)
-					var body = collision.get_collider()
-					if body and body.is_in_group("semisolid"):
-						was_on_semisolid = true
+		# Thrown bomb: apply gravity to velocity and move by velocity
+		if not is_on_floor():
+			velocity.y += GRAVITY * delta
 		else:
-			# Non-thrown bomb: apply gravity directly to position (original behavior)
-			if not is_on_floor():
-				position.y += GRAVITY * delta
+			# When on floor, set vertical velocity to 0 and apply friction to horizontal velocity
+			velocity.y = 0.0
+			# Apply friction to horizontal movement
+			velocity.x = move_toward(velocity.x, 0, FRICTION * delta)
+
+		# Use move_and_slide for proper physics collision
+		move_and_slide()
+		
+		# Update semisolid platform state tracking
+		was_on_semisolid = false
+		if is_on_floor():
+			var bodies = get_slide_collision_count()
+			for i in range(bodies):
+				var collision = get_slide_collision(i)
+				var body = collision.get_collider()
+				if body and body.is_in_group("semisolid"):
+					was_on_semisolid = true
 	
 	# Handle safe period timer for thrown bombs
 	if state == BombState.THROWN_SAFE:
