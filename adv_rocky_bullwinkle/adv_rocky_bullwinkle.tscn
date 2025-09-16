@@ -26,7 +26,7 @@ tile_set = ExtResource("2_oa7qo")
 [node name="Bombs" type="Node2D" parent="."]
 
 [node name="Bomb" parent="Bombs" instance=ExtResource("4_t2io7")]
-position = Vector2(144, 184)
+position = Vector2(144, 192)
 
 [node name="Bullwinkle" parent="." instance=ExtResource("1_fsveu")]
 position = Vector2(208, 176)

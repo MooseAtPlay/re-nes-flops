@@ -8,8 +8,19 @@ func _ready() -> void:
 	
 	# Connect bomb checker signals
 	if bomb_checker:
+		print("DEBUG: BombChecker collision_layer: ", bomb_checker.collision_layer)
+		print("DEBUG: BombChecker collision_mask: ", bomb_checker.collision_mask)
+		print("DEBUG: BombChecker monitoring: ", bomb_checker.monitoring)
+		print("DEBUG: BombChecker monitorable: ", bomb_checker.monitorable)
+		# Fix collision settings to detect bombs on layers 1 and 2
+		bomb_checker.collision_layer = 0  # Keep checker on no layer (Area2D)
+		bomb_checker.collision_mask = 3   # Detect layer 1 (armed bombs) + layer 2 (unarmed bombs)
+		print("DEBUG: Updated BombChecker collision_layer to: ", bomb_checker.collision_layer)
+		print("DEBUG: Updated BombChecker collision_mask to: ", bomb_checker.collision_mask)
 		bomb_checker.area_entered.connect(_on_bomb_checker_area_entered)
 		bomb_checker.area_exited.connect(_on_bomb_checker_area_exited)
+		bomb_checker.body_entered.connect(_on_bomb_checker_body_entered)
+		bomb_checker.body_exited.connect(_on_bomb_checker_body_exited)
 	else:
 		print("ERROR: Bomb checker not found")
 
@@ -210,9 +221,12 @@ func stop_bending() -> void:
 
 func check_bomb_pickup() -> void:
 	"""Check if character is colliding with an unarmed bomb and pick it up"""
+	print("DEBUG: Checking bomb pickup, nearby_bombs count: ", nearby_bombs.size())
 	# Check nearby bombs that are in the Area2D
 	for bomb in nearby_bombs:
+		print("DEBUG: Checking bomb: ", bomb, " state: ", bomb.get("state") if bomb.has_method("get") else "no get method")
 		if bomb.has_method("get") and bomb.get("state") == 0:  # UNARMED state
+			print("DEBUG: Found UNARMED bomb, picking up")
 			pickup_bomb(bomb)
 			break
 
@@ -228,10 +242,28 @@ func pickup_bomb(bomb: Node2D) -> void:
 
 func _on_bomb_checker_area_entered(area: Area2D) -> void:
 	"""Handle when a bomb enters the bomb checker area"""
+	print("DEBUG: Area entered: ", area, " is in bombs group: ", area.is_in_group("bombs"))
 	if area.is_in_group("bombs"):
 		nearby_bombs.append(area)
+		print("DEBUG: Added bomb to nearby_bombs, count: ", nearby_bombs.size())
+
+func _on_bomb_checker_body_entered(body: Node2D) -> void:
+	"""Handle when a body enters the bomb checker area"""
+	print("DEBUG: Body entered: ", body, " is in bombs group: ", body.is_in_group("bombs"))
+	if body.is_in_group("bombs"):
+		nearby_bombs.append(body)
+		print("DEBUG: Added bomb to nearby_bombs, count: ", nearby_bombs.size())
 
 func _on_bomb_checker_area_exited(area: Area2D) -> void:
 	"""Handle when a bomb exits the bomb checker area"""
+	print("DEBUG: Area exited: ", area, " is in bombs group: ", area.is_in_group("bombs"))
 	if area.is_in_group("bombs"):
 		nearby_bombs.erase(area)
+		print("DEBUG: Removed bomb from nearby_bombs, count: ", nearby_bombs.size())
+
+func _on_bomb_checker_body_exited(body: Node2D) -> void:
+	"""Handle when a body exits the bomb checker area"""
+	print("DEBUG: Body exited: ", body, " is in bombs group: ", body.is_in_group("bombs"))
+	if body.is_in_group("bombs"):
+		nearby_bombs.erase(body)
+		print("DEBUG: Removed bomb from nearby_bombs, count: ", nearby_bombs.size())
