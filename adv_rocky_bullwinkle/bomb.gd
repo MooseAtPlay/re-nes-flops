@@ -1,7 +1,6 @@
 extends CharacterBody2D
 
 enum BombState {
-	UNARMED,
 	ARMED,
 	THROWN_SAFE,  # Safe period after being thrown - won't damage thrower
 	EXPLODING
@@ -11,7 +10,7 @@ enum BombState {
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var damage_area: Area2D = $DamageArea
 
-@export var state: BombState = BombState.UNARMED
+@export var state: BombState = BombState.ARMED
 @export var armed_explode_time: float = 2.0  # in seconds
 
 var armed_timer: float = 0.0
@@ -30,11 +29,8 @@ var was_on_semisolid: bool = false
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	print("DEBUG: Bomb created - state: ", state, " collision_layer: ", collision_layer, " collision_mask: ", collision_mask)
-	# Set collision layer based on bomb state
-	if state == BombState.UNARMED:
-		collision_layer = 2  # UNARMED bombs on layer 2 (don't collide with characters)
-	else:
-		collision_layer = 1  # Other bombs on layer 1 (collide with characters)
+	# All bombs are on layer 1 (collide with characters)
+	collision_layer = 1
 	print("DEBUG: Set bomb collision_layer to: ", collision_layer)
 	# Check if animated_sprite exists
 	if animated_sprite:
@@ -53,13 +49,12 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	# Handle semisolid platform collision FIRST (only for moving bombs)
-	if state != BombState.UNARMED:
-		handle_semisolid_collision()
+	# Handle semisolid platform collision FIRST
+	handle_semisolid_collision()
 	
 	# Handle movement based on velocity and gravity
-	# UNARMED bombs should be stationary - no movement or collision
-	if state != BombState.UNARMED and state != BombState.EXPLODING and not is_held:
+	# Only move if not exploding and not being held
+	if state != BombState.EXPLODING and not is_held:
 		# Thrown bomb: apply gravity to velocity and move by velocity
 		if not is_on_floor():
 			velocity.y += GRAVITY * delta
@@ -150,10 +145,8 @@ func set_held(held: bool) -> void:
 
 func update_collision_layer() -> void:
 	"""Update collision layer based on bomb state"""
-	if state == BombState.UNARMED:
-		collision_layer = 2  # UNARMED bombs on layer 2 (don't collide with characters)
-	else:
-		collision_layer = 1  # Other bombs on layer 1 (collide with characters)
+	# All bombs are on layer 1 (collide with characters)
+	collision_layer = 1
 	print("DEBUG: Updated bomb collision_layer to: ", collision_layer, " for state: ", state)
 
 func set_thrown_by(character: Node2D) -> void:
