@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://chlyi1454wnta"]
+
+[ext_resource type="Texture2D" uid="uid://dk0mv42qf8ls4" path="res://adv_rocky_bullwinkle/assets/bomb.png" id="1_i6fmd"]
+[ext_resource type="Script" uid="uid://of8onrmxs2id" path="res://adv_rocky_bullwinkle/unarmed_bomb.gd" id="1_rvurs"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rvurs"]
+atlas = ExtResource("1_i6fmd")
+region = Rect2(76, 0, 38, 38)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_75cjc"]
+atlas = ExtResource("1_i6fmd")
+region = Rect2(114, 0, 38, 38)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_huwg3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rvurs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_75cjc")
+}],
+"loop": true,
+"name": &"default",
+"speed": 1.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5c5pc"]
+radius = 6.0
+
+[node name="UnarmedBomb" type="Area2D" groups=["bombs"]]
+collision_layer = 2
+script = ExtResource("1_rvurs")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(2, -11)
+sprite_frames = SubResource("SpriteFrames_huwg3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, -1)
+shape = SubResource("CircleShape2D_5c5pc")

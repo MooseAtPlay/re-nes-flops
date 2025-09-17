@@ -1,13 +1,14 @@
-[gd_scene load_steps=9 format=4 uid="uid://nrvqjkb1t7cs"]
+[gd_scene load_steps=10 format=4 uid="uid://nrvqjkb1t7cs"]
 
 [ext_resource type="Script" uid="uid://bsel00rsfound" path="res://adv_rocky_bullwinkle/adv_rocky_bullwinkle.gd" id="1_cnuhv"]
 [ext_resource type="PackedScene" uid="uid://cgnxvjsdkvjah" path="res://adv_rocky_bullwinkle/bullwinkle.tscn" id="1_fsveu"]
 [ext_resource type="TileSet" uid="uid://cyrdmeppayrwv" path="res://adv_rocky_bullwinkle/assets/ss001_tile_set.tres" id="2_4xyst"]
 [ext_resource type="TileSet" uid="uid://jx67v2sq1r63" path="res://adv_rocky_bullwinkle/assets/ss002_tile_set.tres" id="2_oa7qo"]
-[ext_resource type="PackedScene" uid="uid://bdutr45f50vaj" path="res://adv_rocky_bullwinkle/bomb.tscn" id="4_t2io7"]
 [ext_resource type="Texture2D" uid="uid://db1kai0036bev" path="res://adv_rocky_bullwinkle/assets/bomb_icon.png" id="6_28dud"]
 [ext_resource type="Theme" uid="uid://pi8xc32lblwd" path="res://adv_rocky_bullwinkle/ui_theme.tres" id="6_tywak"]
 [ext_resource type="Texture2D" uid="uid://djbpahuwrxw68" path="res://adv_rocky_bullwinkle/assets/heart_icon.png" id="7_u1cvl"]
+[ext_resource type="PackedScene" uid="uid://chlyi1454wnta" path="res://adv_rocky_bullwinkle/unarmed_bomb.tscn" id="9_cpmyt"]
+[ext_resource type="PackedScene" uid="uid://dkoxch7tm6o2x" path="res://adv_rocky_bullwinkle/boris.tscn" id="9_uflor"]
 
 [node name="AdvRockyBullwinkle" type="Node2D"]
 script = ExtResource("1_cnuhv")
@@ -25,16 +26,16 @@ tile_set = ExtResource("2_oa7qo")
 
 [node name="Bombs" type="Node2D" parent="."]
 
-[node name="Bomb" parent="Bombs" instance=ExtResource("4_t2io7")]
-position = Vector2(144, 192)
-
 [node name="Bullwinkle" parent="." instance=ExtResource("1_fsveu")]
-position = Vector2(208, 176)
+position = Vector2(76, 176)
 
 [node name="Camera2D" type="Camera2D" parent="Bullwinkle"]
 zoom = Vector2(3, 3)
 limit_left = 0
 limit_bottom = 224
+
+[node name="Boris" parent="." instance=ExtResource("9_uflor")]
+position = Vector2(308, 184)
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 
@@ -101,3 +102,6 @@ size_flags_horizontal = 8
 size_flags_vertical = 0
 text = "0"
 horizontal_alignment = 2
+
+[node name="UnarmedBomb" parent="." instance=ExtResource("9_cpmyt")]
+position = Vector2(148, 196)
