@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://irptxuwixfnh"]
+
+[ext_resource type="Texture2D" uid="uid://bis4ic023xbvo" path="res://adv_rocky_bullwinkle/assets/lock.png" id="1_8gqoe"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pv68a"]
+radius = 4.0
+height = 14.0
+
+[node name="Lock" type="Area2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_8gqoe")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_pv68a")
