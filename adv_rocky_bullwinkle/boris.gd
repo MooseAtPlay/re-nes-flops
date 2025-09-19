@@ -155,6 +155,10 @@ func take_damage(amount: int) -> void:
 	health = max(0, health - amount)
 	
 	if health <= 0:
+		# Give player a key when Boris dies
+		var game_state = get_node("/root/AdvRockyBullwinkle")
+		if game_state:
+			game_state.add_key()
 		queue_free()
 
 func _on_player_facing_timeout() -> void:

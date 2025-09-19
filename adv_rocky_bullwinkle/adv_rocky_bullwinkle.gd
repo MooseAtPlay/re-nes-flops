@@ -4,6 +4,7 @@ extends Node2D
 @export var health: int = 12
 @export var max_health: int = 12
 @export var bombs: int = 10
+@export var keys: int = 0
 
 # Game State
 var game_paused: bool = false
@@ -16,6 +17,7 @@ var level: int = 1
 # UI References
 @onready var health_label: Label = %Health
 @onready var bombs_label: Label = %Bombs
+@onready var keys_label: Label = %Keys
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -62,6 +64,10 @@ func add_bombs(amount: int) -> void:
 	bombs += amount
 	update_ui()
 
+func add_key() -> void:
+	keys += 1
+	update_ui()
+
 func _on_bomb_used() -> void:
 	use_bomb()
 
@@ -90,6 +96,7 @@ func update_ui() -> void:
 	# Update UI labels
 	health_label.text = str(health) + "/" + str(max_health)
 	bombs_label.text = str(bombs)
+	keys_label.text = str(keys)
 
 # Input handling
 func _input(event: InputEvent) -> void:

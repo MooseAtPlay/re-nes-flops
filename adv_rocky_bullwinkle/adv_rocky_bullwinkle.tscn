@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=4 uid="uid://nrvqjkb1t7cs"]
+[gd_scene load_steps=12 format=4 uid="uid://nrvqjkb1t7cs"]
 
 [ext_resource type="Script" uid="uid://bsel00rsfound" path="res://adv_rocky_bullwinkle/adv_rocky_bullwinkle.gd" id="1_cnuhv"]
 [ext_resource type="PackedScene" uid="uid://cgnxvjsdkvjah" path="res://adv_rocky_bullwinkle/bullwinkle.tscn" id="1_fsveu"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dkoxch7tm6o2x" path="res://adv_rocky_bullwinkle/boris.tscn" id="7_cpmyt"]
 [ext_resource type="Texture2D" uid="uid://djbpahuwrxw68" path="res://adv_rocky_bullwinkle/assets/heart_icon.png" id="7_u1cvl"]
 [ext_resource type="PackedScene" uid="uid://chlyi1454wnta" path="res://adv_rocky_bullwinkle/unarmed_bomb.tscn" id="9_cpmyt"]
+[ext_resource type="Texture2D" uid="uid://cxpnpu7r2fsgj" path="res://adv_rocky_bullwinkle/assets/key.png" id="11_b875o"]
 
 [node name="AdvRockyBullwinkle" type="Node2D"]
 script = ExtResource("1_cnuhv")
@@ -41,6 +42,9 @@ position = Vector2(412, 164)
 
 [node name="UnarmedBomb4" parent="PlacedBombs" instance=ExtResource("9_cpmyt")]
 position = Vector2(728, 196)
+
+[node name="UnarmedBomb5" parent="PlacedBombs" instance=ExtResource("9_cpmyt")]
+position = Vector2(644, 196)
 
 [node name="Bombs" type="Node2D" parent="."]
 
@@ -82,7 +86,7 @@ offset_top = 4.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureRect2" type="TextureRect" parent="UILayer/UIContainer/Panel/HFlowContainer"]
+[node name="HealthIcon" type="TextureRect" parent="UILayer/UIContainer/Panel/HFlowContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 texture = ExtResource("7_u1cvl")
@@ -94,7 +98,7 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "12/12"
 
-[node name="TextureRect" type="TextureRect" parent="UILayer/UIContainer/Panel/HFlowContainer"]
+[node name="BombIcon" type="TextureRect" parent="UILayer/UIContainer/Panel/HFlowContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 texture = ExtResource("6_28dud")
@@ -105,3 +109,15 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "10"
+
+[node name="KeyIcon" type="TextureRect" parent="UILayer/UIContainer/Panel/HFlowContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("11_b875o")
+
+[node name="Keys" type="Label" parent="UILayer/UIContainer/Panel/HFlowContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "0	"
