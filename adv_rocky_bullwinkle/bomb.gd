@@ -151,7 +151,6 @@ func explode() -> void:
 	"""Explode the bomb"""
 	print("DEBUG: Setting exploding state")
 	state = BombState.EXPLODING
-	print("DEBUG: Setting armed timer: ", armed_timer)
 	armed_timer = 0.0
 	has_damaged_player = false
 	has_damaged_enemy = false
