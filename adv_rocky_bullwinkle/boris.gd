@@ -5,9 +5,16 @@ const JUMP_VELOCITY = -400.0
 const MOVE_SPEED = 150.0
 const MIN_DISTANCE = 92.0
 
+# Tactical bomb throwing constants
+const THROW_LOW_HORIZONTAL_VELOCITY = 180.0  # Faster horizontal for low shots
+const THROW_LOW_VERTICAL_VELOCITY = -80.0    # Lower arc for under-platform shots
+
 # Health system
 @export var health: int = 6
 @export var max_health: int = 6
+
+# Debug options
+@export var always_throw_low: bool = false
 
 # Bomb throwing state
 var throw_delay_timer: Timer
@@ -125,7 +132,23 @@ func start_bomb_throw_sequence() -> void:
 func _on_throw_delay_timeout() -> void:
 	"""Called when the delay timer times out - throw the bomb"""
 	if is_holding_bomb:
-		throw_bomb()
+		# Check if player is on floor and decide on throw trajectory
+		var player = get_node("/root/AdvRockyBullwinkle/Bullwinkle")
+		var use_low_trajectory = false
+		
+		if always_throw_low:
+			# Debug mode: always use low trajectory
+			use_low_trajectory = true
+		elif player and player.is_on_floor():
+			# 25% chance to use low trajectory when player is on floor
+			use_low_trajectory = randf() < 0.25
+		
+		if use_low_trajectory:
+			# Use tactical low trajectory for under-platform shots
+			throw_bomb(THROW_LOW_HORIZONTAL_VELOCITY, THROW_LOW_VERTICAL_VELOCITY)
+		else:
+			# Use default trajectory
+			throw_bomb()
 
 func take_damage(amount: int) -> void:
 	"""Take damage and handle death"""

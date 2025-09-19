@@ -6,8 +6,8 @@ extends CharacterBody2D
 
 # Bomb throwing variables
 var held_bomb: Node2D = null
-const THROW_HORIZONTAL_VELOCITY = 120.0
-const THROW_VERTICAL_VELOCITY = -160.0
+const DEFAULT_THROW_HORIZONTAL_VELOCITY = 120.0
+const DEFAULT_THROW_VERTICAL_VELOCITY = -160.0
 @export var throw_variance: float = 20.0
 
 # Animation state tracking for bombs
@@ -84,8 +84,8 @@ func create_held_bomb() -> void:
 	# Set holding state for animation
 	is_holding_bomb = true
 
-func throw_bomb() -> void:
-	"""Throw the held bomb"""
+func throw_bomb(custom_horizontal_velocity: float = DEFAULT_THROW_HORIZONTAL_VELOCITY, custom_vertical_velocity: float = DEFAULT_THROW_VERTICAL_VELOCITY) -> void:
+	"""Throw the held bomb with optional custom velocities"""
 	if held_bomb == null:
 		return
 	
@@ -100,8 +100,8 @@ func throw_bomb() -> void:
 	var vertical_variance = randf_range(0.0, throw_variance)
 	
 	held_bomb.velocity = Vector2(
-		THROW_HORIZONTAL_VELOCITY * throw_direction + velocity.x + horizontal_variance,
-		THROW_VERTICAL_VELOCITY + vertical_variance
+		custom_horizontal_velocity * throw_direction + velocity.x + horizontal_variance,
+		custom_vertical_velocity + vertical_variance
 	)
 	
 	# Set the thrower and start safe period
