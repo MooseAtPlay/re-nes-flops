@@ -68,6 +68,10 @@ func add_key() -> void:
 	keys += 1
 	update_ui()
 
+func scene_done() -> void:
+	print("DEBUG: Scene completed! Player has used the exit.")
+	# TODO: Add scene transition logic here
+
 func _on_bomb_used() -> void:
 	use_bomb()
 

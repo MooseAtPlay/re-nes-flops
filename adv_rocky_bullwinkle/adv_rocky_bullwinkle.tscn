@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4 uid="uid://nrvqjkb1t7cs"]
+[gd_scene load_steps=12 format=4 uid="uid://nrvqjkb1t7cs"]
 
 [ext_resource type="Script" uid="uid://bsel00rsfound" path="res://adv_rocky_bullwinkle/adv_rocky_bullwinkle.gd" id="1_cnuhv"]
 [ext_resource type="PackedScene" uid="uid://cgnxvjsdkvjah" path="res://adv_rocky_bullwinkle/bullwinkle.tscn" id="1_fsveu"]
@@ -8,13 +8,13 @@
 [ext_resource type="PackedScene" uid="uid://irptxuwixfnh" path="res://adv_rocky_bullwinkle/lock.tscn" id="6_2q8et"]
 [ext_resource type="Texture2D" uid="uid://db1kai0036bev" path="res://adv_rocky_bullwinkle/assets/bomb_icon.png" id="6_28dud"]
 [ext_resource type="Theme" uid="uid://pi8xc32lblwd" path="res://adv_rocky_bullwinkle/ui_theme.tres" id="6_tywak"]
-[ext_resource type="PackedScene" uid="uid://dkoxch7tm6o2x" path="res://adv_rocky_bullwinkle/boris.tscn" id="7_cpmyt"]
+[ext_resource type="PackedScene" uid="uid://dm4bi4m5q3lci" path="res://adv_rocky_bullwinkle/exit.tscn" id="7_k5i8u"]
 [ext_resource type="Texture2D" uid="uid://djbpahuwrxw68" path="res://adv_rocky_bullwinkle/assets/heart_icon.png" id="7_u1cvl"]
-[ext_resource type="PackedScene" uid="uid://chlyi1454wnta" path="res://adv_rocky_bullwinkle/unarmed_bomb.tscn" id="9_cpmyt"]
 [ext_resource type="Texture2D" uid="uid://cxpnpu7r2fsgj" path="res://adv_rocky_bullwinkle/assets/key.png" id="11_b875o"]
 
 [node name="AdvRockyBullwinkle" type="Node2D"]
 script = ExtResource("1_cnuhv")
+keys = 1
 
 [node name="TileLayers" type="Node2D" parent="."]
 
@@ -32,39 +32,22 @@ tile_set = ExtResource("4_uflor")
 
 [node name="PlacedBombs" type="Node2D" parent="."]
 
-[node name="UnarmedBomb" parent="PlacedBombs" instance=ExtResource("9_cpmyt")]
-position = Vector2(536, 132)
-
-[node name="UnarmedBomb2" parent="PlacedBombs" instance=ExtResource("9_cpmyt")]
-position = Vector2(200, 192)
-
-[node name="UnarmedBomb3" parent="PlacedBombs" instance=ExtResource("9_cpmyt")]
-position = Vector2(412, 164)
-
-[node name="UnarmedBomb4" parent="PlacedBombs" instance=ExtResource("9_cpmyt")]
-position = Vector2(728, 196)
-
-[node name="UnarmedBomb5" parent="PlacedBombs" instance=ExtResource("9_cpmyt")]
-position = Vector2(644, 196)
-
 [node name="Bombs" type="Node2D" parent="."]
+
+[node name="Exit" parent="." instance=ExtResource("7_k5i8u")]
+position = Vector2(940, 168)
 
 [node name="Lock" parent="." instance=ExtResource("6_2q8et")]
 unique_name_in_owner = true
 position = Vector2(944, 168)
 
 [node name="Bullwinkle" parent="." instance=ExtResource("1_fsveu")]
-position = Vector2(76, 176)
+position = Vector2(936, 168)
 
 [node name="Camera2D" type="Camera2D" parent="Bullwinkle"]
 zoom = Vector2(3, 3)
 limit_left = 0
 limit_bottom = 224
-
-[node name="Boris" parent="." instance=ExtResource("7_cpmyt")]
-position = Vector2(328, 184)
-health = 12
-max_health = 12
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 

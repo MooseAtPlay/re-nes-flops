@@ -1,8 +1,10 @@
 extends BombCharacter
 
 @onready var bomb_checker: Area2D = $BombChecker
+@onready var exit_checker: Area2D = $ExitChecker
 
 func _ready() -> void:
+	print("DEBUG: Bullwinkle _ready() called")
 	# Connect to animation finished signal
 	animated_sprite.animation_finished.connect(_on_animation_finished)
 	
@@ -23,6 +25,20 @@ func _ready() -> void:
 		bomb_checker.body_exited.connect(_on_bomb_checker_body_exited)
 	else:
 		print("ERROR: Bomb checker not found")
+	
+	# Connect exit checker signals
+	if exit_checker:
+		print("DEBUG: ExitChecker collision_layer: ", exit_checker.collision_layer)
+		print("DEBUG: ExitChecker collision_mask: ", exit_checker.collision_mask)
+		print("DEBUG: ExitChecker monitoring: ", exit_checker.monitoring)
+		print("DEBUG: ExitChecker monitorable: ", exit_checker.monitorable)
+		# Configure exit checker to detect exit areas
+		exit_checker.collision_layer = 0  # Keep checker on no layer (Area2D)
+		exit_checker.collision_mask = 4   # Detect layer 3 (exits) - assuming exits are on layer 3
+		print("DEBUG: Updated ExitChecker collision_layer to: ", exit_checker.collision_layer)
+		print("DEBUG: Updated ExitChecker collision_mask to: ", exit_checker.collision_mask)
+	else:
+		print("ERROR: Exit checker not found")
 
 const MAX_SPEED = 300.0
 const ACCELERATION = 800.0
@@ -134,7 +150,14 @@ func handle_bomb_input() -> void:
 	
 	# Check if hold_bomb action is pressed (start holding)
 	if Input.is_action_just_pressed("hold_bomb") and held_bomb == null:
-		create_held_bomb()
+		print("DEBUG: hold_bomb pressed, checking for exit")
+		# Check if we're at an exit first
+		if is_at_exit():
+			print("DEBUG: At exit, calling handle_exit_interaction")
+			handle_exit_interaction()
+		else:
+			print("DEBUG: Not at exit, creating bomb")
+			create_held_bomb()
 	
 	# Check if hold_bomb action is released (throw bomb)
 	elif Input.is_action_just_released("hold_bomb") and held_bomb != null:
@@ -239,6 +262,41 @@ func pickup_bomb(bomb: Node2D) -> void:
 	
 	# Free the bomb node
 	bomb.queue_free()
+
+func is_at_exit() -> bool:
+	"""Check if the player is colliding with an exit"""
+	if not exit_checker:
+		print("DEBUG: exit_checker is null")
+		return false
+	
+	var areas = exit_checker.get_overlapping_areas()
+	print("DEBUG: exit_checker overlapping areas: ", areas)
+	for area in areas:
+		print("DEBUG: Area: ", area, " is in exits group: ", area.is_in_group("exits"))
+		if area.is_in_group("exits"):
+			print("DEBUG: Found exit area!")
+			return true
+	print("DEBUG: No exit areas found")
+	return false
+
+func handle_exit_interaction() -> void:
+	"""Handle interaction with exit"""
+	print("DEBUG: handle_exit_interaction called")
+	var game_state = get_node("/root/AdvRockyBullwinkle")
+	if not game_state:
+		print("DEBUG: No game_state found")
+		return
+	
+	print("DEBUG: Player has keys: ", game_state.keys)
+	# Check if player has keys
+	if game_state.keys > 0:
+		# Use the exit
+		print("DEBUG: Using exit")
+		game_state.scene_done()
+	else:
+		print("DEBUG: No keys, creating bomb instead")
+		# No keys, create bomb normally
+		create_held_bomb()
 
 func _on_bomb_checker_area_entered(area: Area2D) -> void:
 	"""Handle when a bomb enters the bomb checker area"""
