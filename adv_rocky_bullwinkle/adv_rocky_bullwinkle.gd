@@ -4,8 +4,6 @@ extends Node2D
 @export var health: int = 12
 @export var max_health: int = 12
 @export var bombs: int = 10
-@export var lives: int = 4
-@export var score: int = 0
 
 # Game State
 var game_paused: bool = false
@@ -18,8 +16,6 @@ var level: int = 1
 # UI References
 @onready var health_label: Label = %Health
 @onready var bombs_label: Label = %Bombs
-@onready var lives_label: Label = %Lives
-@onready var score_label: Label = %Score
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -69,28 +65,7 @@ func add_bombs(amount: int) -> void:
 func _on_bomb_used() -> void:
 	use_bomb()
 
-# Lives Functions
-func lose_life() -> void:
-	lives -= 1
-	update_ui()
-	
-	if lives <= 0:
-		_on_game_over()
-	else:
-		_respawn_player()
 
-func add_life() -> void:
-	lives += 1
-	update_ui()
-
-# Score Functions
-func add_score(points: int) -> void:
-	score += points
-	update_ui()
-
-func reset_score() -> void:
-	score = 0
-	update_ui()
 
 # Game State Functions
 func pause_game() -> void:
@@ -102,28 +77,19 @@ func unpause_game() -> void:
 	get_tree().paused = false
 
 func _on_player_died() -> void:
-	lose_life()
+	_on_game_over()
 
 func _on_game_over() -> void:
 	game_over = true
 	# TODO: Show game over screen
 
 
-func _respawn_player() -> void:
-	# Reset player health and position
-	health = max_health
-	if player:
-		# TODO: Reset player position to spawn point
-		pass
-	update_ui()
 
 # UI Functions
 func update_ui() -> void:
 	# Update UI labels
-	health_label.text = "Health: " + str(health) + "/" + str(max_health)
+	health_label.text = str(health) + "/" + str(max_health)
 	bombs_label.text = str(bombs)
-	lives_label.text = str(lives)
-	score_label.text = "Score: " + str(score)
 
 # Input handling
 func _input(event: InputEvent) -> void:
