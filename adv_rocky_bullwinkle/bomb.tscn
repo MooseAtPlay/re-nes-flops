@@ -89,7 +89,6 @@ radius = 6.0
 radius = 8.944272
 
 [node name="Bomb" type="CharacterBody2D" groups=["bombs"]]
-collision_layer = 0
 collision_mask = 3
 script = ExtResource("1_1124j")
 

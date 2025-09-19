@@ -29,9 +29,6 @@ var was_on_semisolid: bool = false
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	print("DEBUG: Bomb created - state: ", state, " collision_layer: ", collision_layer, " collision_mask: ", collision_mask)
-	# All bombs are on layer 1 (collide with characters)
-	collision_layer = 1
-	print("DEBUG: Set bomb collision_layer to: ", collision_layer)
 	# Check if animated_sprite exists
 	if animated_sprite:
 		# Connect to animation finished signal
@@ -100,8 +97,6 @@ func _process(delta: float) -> void:
 			print("DEBUG: Safe period over, setting to armed state")
 			state = BombState.ARMED
 			armed_timer = 0.0
-			# Update collision layer for new state
-			update_collision_layer()
 	
 	# Handle armed bomb timer
 	if state == BombState.ARMED:
@@ -143,12 +138,6 @@ func set_held(held: bool) -> void:
 		# When released, clear any accumulated velocity from gravity
 		velocity = Vector2.ZERO
 
-func update_collision_layer() -> void:
-	"""Update collision layer based on bomb state"""
-	# All bombs are on layer 1 (collide with characters)
-	collision_layer = 1
-	print("DEBUG: Updated bomb collision_layer to: ", collision_layer, " for state: ", state)
-
 func set_thrown_by(character: Node2D) -> void:
 	"""Set the character who threw this bomb and start safe period"""
 	print("DEBUG: Setting thrown by: ", character)
@@ -157,8 +146,6 @@ func set_thrown_by(character: Node2D) -> void:
 	state = BombState.THROWN_SAFE
 	print("DEBUG: Setting safe period timer: ", safe_period_timer)
 	safe_period_timer = 0.0
-	# Update collision layer for new state
-	update_collision_layer()
 
 func explode() -> void:
 	"""Explode the bomb"""
