@@ -25,20 +25,6 @@ func _ready() -> void:
 		bomb_checker.body_exited.connect(_on_bomb_checker_body_exited)
 	else:
 		print("ERROR: Bomb checker not found")
-	
-	# Connect exit checker signals
-	if exit_checker:
-		print("DEBUG: ExitChecker collision_layer: ", exit_checker.collision_layer)
-		print("DEBUG: ExitChecker collision_mask: ", exit_checker.collision_mask)
-		print("DEBUG: ExitChecker monitoring: ", exit_checker.monitoring)
-		print("DEBUG: ExitChecker monitorable: ", exit_checker.monitorable)
-		# Configure exit checker to detect exit areas
-		exit_checker.collision_layer = 0  # Keep checker on no layer (Area2D)
-		exit_checker.collision_mask = 4   # Detect layer 3 (exits) - assuming exits are on layer 3
-		print("DEBUG: Updated ExitChecker collision_layer to: ", exit_checker.collision_layer)
-		print("DEBUG: Updated ExitChecker collision_mask to: ", exit_checker.collision_mask)
-	else:
-		print("ERROR: Exit checker not found")
 
 const MAX_SPEED = 300.0
 const ACCELERATION = 800.0
