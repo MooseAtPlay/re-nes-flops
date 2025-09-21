@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://n522pq2x6ysm"]
+
+[ext_resource type="Texture2D" uid="uid://cxpnpu7r2fsgj" path="res://adv_rocky_bullwinkle/assets/key.png" id="1_g8odr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7qt08"]
+size = Vector2(16, 9)
+
+[node name="Key" type="Area2D" groups=["keys"]]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_g8odr")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_7qt08")

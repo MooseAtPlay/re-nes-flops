@@ -33,6 +33,9 @@ var jump_timer: Timer
 # Semisolid platform state tracking
 var was_on_semisolid: bool = false
 
+# Key drop positioning
+const HALF_HEIGHT = 15
+
 func _ready() -> void:
 	# Call parent _ready first
 	super._ready()
@@ -155,11 +158,26 @@ func take_damage(amount: int) -> void:
 	health = max(0, health - amount)
 	
 	if health <= 0:
-		# Give player a key when Boris dies
-		var game_state = get_node("/root/AdvRockyBullwinkle")
-		if game_state:
-			game_state.add_key()
+		# Drop a key when Boris dies
+		drop_key()
 		queue_free()
+
+func drop_key() -> void:
+	"""Drop a key at Boris's feet"""
+	# Load the key scene
+	var key_scene = preload("res://adv_rocky_bullwinkle/key.tscn")
+	if key_scene:
+		# Create a new key instance
+		var key_instance = key_scene.instantiate()
+		if key_instance:
+			# Add it to the scene tree at Boris's feet
+			get_parent().add_child(key_instance)
+			key_instance.global_position = global_position + Vector2(0, HALF_HEIGHT)
+			print("DEBUG: Boris dropped a key at position: ", key_instance.global_position)
+		else:
+			print("ERROR: Failed to instantiate key scene")
+	else:
+		print("ERROR: Failed to load key scene")
 
 func _on_player_facing_timeout() -> void:
 	"""Check player position and face them"""

@@ -10,11 +10,7 @@ func _ready() -> void:
 	
 	# Connect bomb checker signals
 	if bomb_checker:
-		print("DEBUG: BombChecker collision_layer: ", bomb_checker.collision_layer)
-		print("DEBUG: BombChecker collision_mask: ", bomb_checker.collision_mask)
-		print("DEBUG: BombChecker monitoring: ", bomb_checker.monitoring)
-		print("DEBUG: BombChecker monitorable: ", bomb_checker.monitorable)
-		# Fix collision settings to detect bombs on layers 1 and 2
+		# Fix collision settings to detect bombs on layers 1 and 2, and keys
 		bomb_checker.collision_layer = 0  # Keep checker on no layer (Area2D)
 		bomb_checker.collision_mask = 3   # Detect layer 1 (armed bombs) + layer 2 (unarmed bombs)
 		print("DEBUG: Updated BombChecker collision_layer to: ", bomb_checker.collision_layer)
@@ -36,6 +32,9 @@ var is_bending: bool = false
 
 # Bomb pickup tracking
 var nearby_bombs: Array[Node2D] = []
+
+# Key pickup tracking
+var nearby_keys: Array[Node2D] = []
 
 # Semisolid platform state tracking
 var was_on_semisolid: bool = false
@@ -185,8 +184,16 @@ func stop_bending() -> void:
 	is_bending = false
 
 func check_bomb_pickup() -> void:
-	"""Check if character is colliding with an unarmed bomb and pick it up"""
+	"""Check if character is colliding with an unarmed bomb or key and pick it up"""
 	print("DEBUG: Checking bomb pickup, nearby_bombs count: ", nearby_bombs.size())
+	print("DEBUG: Checking key pickup, nearby_keys count: ", nearby_keys.size())
+	
+	# Check nearby keys first (higher priority)
+	for key in nearby_keys:
+		print("DEBUG: Found key, picking up")
+		pickup_key(key)
+		return  # Only pick up one item at a time
+	
 	# Check nearby bombs that are in the Area2D
 	for bomb in nearby_bombs:
 		print("DEBUG: Checking bomb: ", bomb, " state: ", bomb.get("state") if bomb.has_method("get") else "no get method")
@@ -204,6 +211,16 @@ func pickup_bomb(bomb: Node2D) -> void:
 	
 	# Free the bomb node
 	bomb.queue_free()
+
+func pickup_key(key: Node2D) -> void:
+	"""Pick up a key"""
+	# Add key to player stats
+	var game_state = get_node("/root/AdvRockyBullwinkle")
+	if game_state:
+		game_state.add_key()
+	
+	# Free the key node
+	key.queue_free()
 
 func is_at_exit() -> bool:
 	"""Check if the player is colliding with an exit"""
@@ -241,29 +258,41 @@ func handle_exit_interaction() -> void:
 		create_held_bomb()
 
 func _on_bomb_checker_area_entered(area: Area2D) -> void:
-	"""Handle when a bomb enters the bomb checker area"""
-	print("DEBUG: Area entered: ", area, " is in bombs group: ", area.is_in_group("bombs"))
+	"""Handle when a bomb or key enters the bomb checker area"""
+	print("DEBUG: Area entered: ", area, " is in bombs group: ", area.is_in_group("bombs"), " is in keys group: ", area.is_in_group("keys"))
 	if area.is_in_group("bombs"):
 		nearby_bombs.append(area)
 		print("DEBUG: Added bomb to nearby_bombs, count: ", nearby_bombs.size())
+	elif area.is_in_group("keys"):
+		nearby_keys.append(area)
+		print("DEBUG: Added key to nearby_keys, count: ", nearby_keys.size())
 
 func _on_bomb_checker_body_entered(body: Node2D) -> void:
 	"""Handle when a body enters the bomb checker area"""
-	print("DEBUG: Body entered: ", body, " is in bombs group: ", body.is_in_group("bombs"))
+	print("DEBUG: Body entered: ", body, " is in bombs group: ", body.is_in_group("bombs"), " is in keys group: ", body.is_in_group("keys"))
 	if body.is_in_group("bombs"):
 		nearby_bombs.append(body)
 		print("DEBUG: Added bomb to nearby_bombs, count: ", nearby_bombs.size())
+	elif body.is_in_group("keys"):
+		nearby_keys.append(body)
+		print("DEBUG: Added key to nearby_keys, count: ", nearby_keys.size())
 
 func _on_bomb_checker_area_exited(area: Area2D) -> void:
-	"""Handle when a bomb exits the bomb checker area"""
-	print("DEBUG: Area exited: ", area, " is in bombs group: ", area.is_in_group("bombs"))
+	"""Handle when a bomb or key exits the bomb checker area"""
+	print("DEBUG: Area exited: ", area, " is in bombs group: ", area.is_in_group("bombs"), " is in keys group: ", area.is_in_group("keys"))
 	if area.is_in_group("bombs"):
 		nearby_bombs.erase(area)
 		print("DEBUG: Removed bomb from nearby_bombs, count: ", nearby_bombs.size())
+	elif area.is_in_group("keys"):
+		nearby_keys.erase(area)
+		print("DEBUG: Removed key from nearby_keys, count: ", nearby_keys.size())
 
 func _on_bomb_checker_body_exited(body: Node2D) -> void:
 	"""Handle when a body exits the bomb checker area"""
-	print("DEBUG: Body exited: ", body, " is in bombs group: ", body.is_in_group("bombs"))
+	print("DEBUG: Body exited: ", body, " is in bombs group: ", body.is_in_group("bombs"), " is in keys group: ", body.is_in_group("keys"))
 	if body.is_in_group("bombs"):
 		nearby_bombs.erase(body)
 		print("DEBUG: Removed bomb from nearby_bombs, count: ", nearby_bombs.size())
+	elif body.is_in_group("keys"):
+		nearby_keys.erase(body)
+		print("DEBUG: Removed key from nearby_keys, count: ", nearby_keys.size())

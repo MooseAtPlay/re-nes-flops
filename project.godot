@@ -28,6 +28,7 @@ window/stretch/scale_mode="integer"
 
 bombs=""
 exits="A level exit"
+keys="A key that can be picked up"
 
 [input]
 
