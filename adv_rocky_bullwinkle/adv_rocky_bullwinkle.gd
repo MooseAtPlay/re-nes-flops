@@ -101,11 +101,3 @@ func update_ui() -> void:
 	health_label.text = str(health) + "/" + str(max_health)
 	bombs_label.text = str(bombs)
 	keys_label.text = str(keys)
-
-# Input handling
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause"):
-		if game_paused:
-			unpause_game()
-		else:
-			pause_game()

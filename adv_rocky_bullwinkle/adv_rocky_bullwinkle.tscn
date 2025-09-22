@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=4 uid="uid://nrvqjkb1t7cs"]
+[gd_scene load_steps=16 format=4 uid="uid://nrvqjkb1t7cs"]
 
 [ext_resource type="Script" uid="uid://bsel00rsfound" path="res://adv_rocky_bullwinkle/adv_rocky_bullwinkle.gd" id="1_cnuhv"]
 [ext_resource type="PackedScene" uid="uid://cgnxvjsdkvjah" path="res://adv_rocky_bullwinkle/bullwinkle.tscn" id="1_fsveu"]
@@ -11,9 +11,10 @@
 [ext_resource type="Theme" uid="uid://pi8xc32lblwd" path="res://adv_rocky_bullwinkle/ui_theme.tres" id="6_tywak"]
 [ext_resource type="PackedScene" uid="uid://dm4bi4m5q3lci" path="res://adv_rocky_bullwinkle/exit.tscn" id="7_k5i8u"]
 [ext_resource type="Texture2D" uid="uid://djbpahuwrxw68" path="res://adv_rocky_bullwinkle/assets/heart_icon.png" id="7_u1cvl"]
-[ext_resource type="PackedScene" uid="uid://n522pq2x6ysm" path="res://adv_rocky_bullwinkle/key.tscn" id="8_ron6b"]
 [ext_resource type="PackedScene" uid="uid://dkoxch7tm6o2x" path="res://adv_rocky_bullwinkle/boris.tscn" id="9_ron6b"]
+[ext_resource type="Script" uid="uid://d06bb5lx8fsec" path="res://adv_rocky_bullwinkle/ui_layer.gd" id="10_ron6b"]
 [ext_resource type="Texture2D" uid="uid://cxpnpu7r2fsgj" path="res://adv_rocky_bullwinkle/assets/key.png" id="11_b875o"]
+[ext_resource type="Texture2D" uid="uid://wu8tlrrwcgj3" path="res://adv_rocky_bullwinkle/assets/pause.png" id="15_qpo7b"]
 
 [node name="AdvRockyBullwinkle" type="Node2D"]
 script = ExtResource("1_cnuhv")
@@ -48,9 +49,6 @@ position = Vector2(712, 192)
 
 [node name="Bombs" type="Node2D" parent="."]
 
-[node name="Key" parent="." instance=ExtResource("8_ron6b")]
-position = Vector2(116, 196)
-
 [node name="Exit" parent="." instance=ExtResource("7_k5i8u")]
 position = Vector2(940, 168)
 
@@ -72,6 +70,8 @@ position = Vector2(320, 184)
 health = 1
 
 [node name="UILayer" type="CanvasLayer" parent="."]
+process_mode = 3
+script = ExtResource("10_ron6b")
 
 [node name="UIContainer" type="PanelContainer" parent="UILayer"]
 self_modulate = Color(1, 1, 1, 0)
@@ -131,3 +131,20 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "0	"
+
+[node name="PauseMenu" type="Panel" parent="UILayer/UIContainer"]
+unique_name_in_owner = true
+visible = false
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+
+[node name="PauseMessage" type="TextureRect" parent="UILayer/UIContainer/PauseMenu"]
+layout_mode = 0
+offset_left = 542.0
+offset_top = 316.0
+offset_right = 610.0
+offset_bottom = 332.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("15_qpo7b")
+stretch_mode = 2
