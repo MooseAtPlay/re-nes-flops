@@ -9,6 +9,7 @@ extends Node2D
 # Game State
 var game_paused: bool = false
 var game_over: bool = false
+var success_state: bool = false
 var level: int = 1
 
 # Player References
@@ -70,7 +71,10 @@ func add_key() -> void:
 
 func scene_done() -> void:
 	print("DEBUG: Scene completed! Player has used the exit.")
-	# TODO: Add scene transition logic here
+	# Set success state and show success menu
+	success_state = true
+	pause_game()
+	%SuccessMenu.visible = true
 
 func _on_bomb_used() -> void:
 	use_bomb()

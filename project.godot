@@ -24,6 +24,10 @@ config/icon="uid://dg4s77jjrg4r1"
 window/stretch/mode="viewport"
 window/stretch/scale_mode="integer"
 
+[dotnet]
+
+project/assembly_name="Re-NES Flops"
+
 [global_group]
 
 bombs=""

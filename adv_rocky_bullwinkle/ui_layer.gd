@@ -9,7 +9,7 @@ func _ready() -> void:
 
 # Input handling
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause"):
+	if event.is_action_pressed("pause") and not game_state.success_state:
 		if game_state.game_paused:
 			game_state.unpause_game()
 			%PauseMenu.visible = false
