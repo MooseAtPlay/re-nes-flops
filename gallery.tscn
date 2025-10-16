@@ -1,3 +1,105 @@
-[gd_scene format=3 uid="uid://dfhauiieegxvh"]
+[gd_scene load_steps=5 format=3 uid="uid://dfhauiieegxvh"]
 
-[node name="Gallery" type="Node2D"]
+[ext_resource type="Theme" uid="uid://b4mxpa7ug02" path="res://gallery_theme.tres" id="1_ay20g"]
+[ext_resource type="Texture2D" uid="uid://dm36i21ptj52y" path="res://nes-flops-alpha.png" id="2_0uoo4"]
+[ext_resource type="Script" uid="uid://5lp518w8e0pl" path="res://gallery.gd" id="2_31do6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ay20g"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="Gallery" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_ay20g")
+script = ExtResource("2_31do6")
+
+[node name="GalleryPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ay20g")
+
+[node name="IconPanel" type="Panel" parent="GalleryPanel"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="NesFlopsIcon" type="TextureRect" parent="GalleryPanel/IconPanel"]
+layout_mode = 1
+offset_right = 434.0
+offset_bottom = 446.0
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_0uoo4")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="GalleryPanel"]
+layout_mode = 0
+offset_left = 726.0
+offset_top = 548.0
+offset_right = 997.0
+offset_bottom = 602.0
+theme_override_font_sizes/normal_font_size = 64
+bbcode_enabled = true
+text = "[color=yellow]Re: [color=red]NES[/color] Flops[/color]"
+
+[node name="IntroPanel" type="Panel" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ay20g")
+
+[node name="IntroSlogan" type="Label" parent="IntroPanel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 24.0
+offset_bottom = 72.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_font_sizes/font_size = 64
+text = "Now You're Playing With . . ."
+horizontal_alignment = 1
+
+[node name="NesFlopsSplash" type="TextureRect" parent="IntroPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -217.5
+offset_top = -223.0
+offset_right = 217.5
+offset_bottom = 223.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_0uoo4")

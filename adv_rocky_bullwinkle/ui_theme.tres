@@ -1,6 +1,6 @@
 [gd_resource type="Theme" load_steps=3 format=3 uid="uid://pi8xc32lblwd"]
 
-[ext_resource type="FontFile" uid="uid://d2o7voyc72hi0" path="res://adv_rocky_bullwinkle/Kenney Pixel.ttf" id="1_jfpys"]
+[ext_resource type="FontFile" uid="uid://d2o7voyc72hi0" path="res://Kenney Pixel.ttf" id="1_jfpys"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e0nis"]
 bg_color = Color(0.6313726, 0.6313726, 0.6313726, 1)
