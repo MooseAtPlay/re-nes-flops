@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3 uid="uid://1dftvmgj6yiy"]
+
+[ext_resource type="Texture2D" uid="uid://dhs1lla0n8er8" path="res://adv_rocky_bullwinkle/gallery.png" id="1_3awya"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3awya"]
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+
+[node name="GalleryItem" type="Control"]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -824.0
+offset_bottom = -400.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ImagePanel" type="Panel" parent="."]
+self_modulate = Color(0, 0, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 4.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_3awya")
+
+[node name="GalleryImage" type="Sprite2D" parent="ImagePanel"]
+position = Vector2(160, 120)
+texture = ExtResource("1_3awya")

@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dfhauiieegxvh"]
+[gd_scene load_steps=6 format=3 uid="uid://dfhauiieegxvh"]
 
 [ext_resource type="Theme" uid="uid://b4mxpa7ug02" path="res://gallery_theme.tres" id="1_ay20g"]
 [ext_resource type="Texture2D" uid="uid://dm36i21ptj52y" path="res://nes-flops-alpha.png" id="2_0uoo4"]
 [ext_resource type="Script" uid="uid://5lp518w8e0pl" path="res://gallery.gd" id="2_31do6"]
+[ext_resource type="Texture2D" uid="uid://dhs1lla0n8er8" path="res://adv_rocky_bullwinkle/gallery.png" id="4_qjuxl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ay20g"]
 content_margin_left = 0.0
@@ -66,6 +67,35 @@ theme_override_font_sizes/normal_font_size = 64
 bbcode_enabled = true
 text = "[color=yellow]Re: [color=red]NES[/color] Flops[/color]"
 
+[node name="Games" type="Control" parent="GalleryPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RockyAndBullwinkle" type="Button" parent="GalleryPanel/Games"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 36.0
+offset_right = 364.0
+offset_bottom = 320.0
+text = "Rocky & Bullwinkle"
+icon = ExtResource("4_qjuxl")
+icon_alignment = 1
+vertical_icon_alignment = 0
+
+[node name="QuitButton" type="Button" parent="GalleryPanel"]
+custom_minimum_size = Vector2(128, 64)
+layout_mode = 0
+offset_left = 36.0
+offset_top = 544.0
+offset_right = 164.0
+offset_bottom = 608.0
+theme_override_font_sizes/font_size = 48
+text = "Quit"
+
 [node name="IntroPanel" type="Panel" parent="."]
 unique_name_in_owner = true
 visible = false
@@ -103,3 +133,5 @@ offset_bottom = 223.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_0uoo4")
+
+[connection signal="pressed" from="GalleryPanel/QuitButton" to="." method="_on_quit_button_pressed"]

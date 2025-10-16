@@ -1,7 +1,46 @@
-[gd_resource type="Theme" load_steps=2 format=3 uid="uid://b4mxpa7ug02"]
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://b4mxpa7ug02"]
 
 [ext_resource type="FontFile" uid="uid://d2o7voyc72hi0" path="res://Kenney Pixel.ttf" id="1_su2us"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yswyr"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.8, 0.8, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6d320"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.8, 0.8, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_su2us"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 0.5019608)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [resource]
 default_font = ExtResource("1_su2us")
 default_font_size = 24
+Button/styles/focus = SubResource("StyleBoxFlat_yswyr")
+Button/styles/hover = SubResource("StyleBoxFlat_6d320")
+Button/styles/normal = SubResource("StyleBoxFlat_su2us")
