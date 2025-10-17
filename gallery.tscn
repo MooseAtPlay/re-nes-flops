@@ -68,6 +68,7 @@ bbcode_enabled = true
 text = "[color=yellow]Re: [color=red]NES[/color] Flops[/color]"
 
 [node name="Games" type="Control" parent="GalleryPanel"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -134,4 +135,5 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_0uoo4")
 
+[connection signal="pressed" from="GalleryPanel/Games/RockyAndBullwinkle" to="." method="_on_rocky_and_bullwinkle_pressed"]
 [connection signal="pressed" from="GalleryPanel/QuitButton" to="." method="_on_quit_button_pressed"]

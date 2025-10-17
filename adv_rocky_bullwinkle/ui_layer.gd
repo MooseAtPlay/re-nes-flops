@@ -13,6 +13,10 @@ func _input(event: InputEvent) -> void:
 		if game_state.game_paused:
 			game_state.unpause_game()
 			%PauseMenu.visible = false
+			%GalleryUI.visible = false
 		else:
 			game_state.pause_game()
 			%PauseMenu.visible = true
+			%GalleryUI.visible = true
+			# Set focus on the UnpauseButton when showing pause menu
+			%UnpauseButton.grab_focus()

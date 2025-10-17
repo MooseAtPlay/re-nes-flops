@@ -8,9 +8,7 @@ func _ready() -> void:
 	var timer = get_tree().create_timer(3.0)
 	timer.timeout.connect(_on_splash_timeout)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+	%Games.get_child(0).grab_focus()
 
 func _on_splash_timeout() -> void:
 	fade_out_intro_panel()
@@ -30,3 +28,7 @@ func _on_fade_complete() -> void:
 
 func _on_quit_button_pressed() -> void:
 	get_tree().quit()
+
+
+func _on_rocky_and_bullwinkle_pressed() -> void:
+	get_tree().change_scene_to_file("res://adv_rocky_bullwinkle/adv_rocky_bullwinkle.tscn")

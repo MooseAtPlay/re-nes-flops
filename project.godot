@@ -15,7 +15,7 @@ config/description="Some awful retro games were only a few tweaks away from bein
 
 This project aims to both help me learn game development and design for different genres and also have fun with pixel art!"
 config/version="0.0.1"
-run/main_scene="uid://nrvqjkb1t7cs"
+run/main_scene="uid://dfhauiieegxvh"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="uid://dg4s77jjrg4r1"
 

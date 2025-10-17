@@ -1,8 +1,8 @@
 extends Node2D
 
 # Player Stats
-@export var health: int = 12
-@export var max_health: int = 12
+@export var health: int = 6
+@export var max_health: int = 6
 @export var bombs: int = 10
 @export var keys: int = 0
 
