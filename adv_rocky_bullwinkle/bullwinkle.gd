@@ -234,9 +234,6 @@ func is_at_exit() -> bool:
 		print("DEBUG: Area: ", area, " is in exits group: ", area.is_in_group("exits"))
 		if area.is_in_group("exits"):
 			print("DEBUG: Found exit area!")
-			var game_state = get_node("/root/AdvRockyBullwinkle")
-			if game_state:
-				game_state.scene_done()
 			return true
 	print("DEBUG: No exit areas found")
 	return false
