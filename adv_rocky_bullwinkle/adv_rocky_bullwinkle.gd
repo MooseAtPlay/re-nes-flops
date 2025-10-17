@@ -19,6 +19,7 @@ var level: int = 1
 @onready var health_label: Label = %Health
 @onready var bombs_label: Label = %Bombs
 @onready var keys_label: Label = %Keys
+@onready var gallery_ui: CanvasLayer = %GalleryUI
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -30,6 +31,9 @@ func _ready() -> void:
 		player.connect("health_changed", _on_player_health_changed)
 	if player and player.has_signal("bomb_used"):
 		player.connect("bomb_used", _on_bomb_used)
+	
+	# Connect to gallery UI signals
+	gallery_ui.connect("game_unpaused", _on_game_unpaused)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -79,7 +83,13 @@ func scene_done() -> void:
 func _on_bomb_used() -> void:
 	use_bomb()
 
-
+func _on_game_unpaused() -> void:
+	# Hide the pause UI elements
+	%PauseMenu.visible = false
+	%GalleryUI.visible = false
+	%UnpauseButton.visible = false
+	# Unpause the game
+	unpause_game()
 
 # Game State Functions
 func pause_game() -> void:
