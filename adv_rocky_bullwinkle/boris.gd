@@ -1,5 +1,8 @@
 extends BombCharacter
 
+# Signal emitted when health changes
+signal health_changed(new_health: int)
+
 const SPEED = 200.0
 const JUMP_VELOCITY = -400.0
 const MOVE_SPEED = 150.0
@@ -156,6 +159,9 @@ func _on_throw_delay_timeout() -> void:
 func take_damage(amount: int) -> void:
 	"""Take damage and handle death"""
 	health = max(0, health - amount)
+	
+	# Emit health changed signal
+	health_changed.emit(health)
 	
 	if health <= 0:
 		# Drop a key when Boris dies

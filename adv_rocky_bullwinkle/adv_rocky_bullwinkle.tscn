@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=4 uid="uid://nrvqjkb1t7cs"]
+[gd_scene load_steps=20 format=4 uid="uid://nrvqjkb1t7cs"]
 
 [ext_resource type="Script" uid="uid://bsel00rsfound" path="res://adv_rocky_bullwinkle/adv_rocky_bullwinkle.gd" id="1_cnuhv"]
 [ext_resource type="PackedScene" uid="uid://cgnxvjsdkvjah" path="res://adv_rocky_bullwinkle/bullwinkle.tscn" id="1_fsveu"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://dkoxch7tm6o2x" path="res://adv_rocky_bullwinkle/boris.tscn" id="9_ron6b"]
 [ext_resource type="Script" uid="uid://d06bb5lx8fsec" path="res://adv_rocky_bullwinkle/ui_layer.gd" id="10_ron6b"]
 [ext_resource type="Texture2D" uid="uid://cxpnpu7r2fsgj" path="res://adv_rocky_bullwinkle/assets/key.png" id="11_b875o"]
+[ext_resource type="Texture2D" uid="uid://chaxlj8stm2kv" path="res://adv_rocky_bullwinkle/assets/boris_heart_icon.png" id="15_2girh"]
 [ext_resource type="Texture2D" uid="uid://wu8tlrrwcgj3" path="res://adv_rocky_bullwinkle/assets/pause.png" id="15_qpo7b"]
 [ext_resource type="Texture2D" uid="uid://d0sety7ahn0jk" path="res://adv_rocky_bullwinkle/assets/success.png" id="16_3ncuv"]
 [ext_resource type="Theme" uid="uid://b4mxpa7ug02" path="res://gallery_theme.tres" id="17_xhx8f"]
@@ -69,6 +70,7 @@ limit_right = 960
 limit_bottom = 224
 
 [node name="Boris" parent="." instance=ExtResource("9_ron6b")]
+unique_name_in_owner = true
 position = Vector2(320, 184)
 
 [node name="UILayer" type="CanvasLayer" parent="."]
@@ -108,7 +110,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-text = "12/12"
+text = "6/6"
 
 [node name="BombIcon" type="TextureRect" parent="UILayer/UIContainer/Panel/HFlowContainer"]
 layout_mode = 2
@@ -133,6 +135,18 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "0	"
+
+[node name="BorisHealthIcon" type="TextureRect" parent="UILayer/UIContainer/Panel/HFlowContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("15_2girh")
+
+[node name="BorisHealth" type="Label" parent="UILayer/UIContainer/Panel/HFlowContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "6/6"
 
 [node name="PauseMenu" type="Panel" parent="UILayer/UIContainer"]
 unique_name_in_owner = true
@@ -219,6 +233,7 @@ layout_mode = 2
 text = "Unpause"
 
 [node name="BackButton" type="Button" parent="GalleryUI/GalleryPanel/HBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 64)
 layout_mode = 2
 text = "Back"

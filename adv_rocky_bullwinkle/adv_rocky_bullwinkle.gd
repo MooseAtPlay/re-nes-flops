@@ -14,11 +14,13 @@ var level: int = 1
 
 # Player References
 @onready var player: CharacterBody2D = $Bullwinkle
+@onready var boris: CharacterBody2D = $Boris
 
 # UI References
 @onready var health_label: Label = %Health
 @onready var bombs_label: Label = %Bombs
 @onready var keys_label: Label = %Keys
+@onready var boris_health_label: Label = %BorisHealth
 @onready var gallery_ui: CanvasLayer = %GalleryUI
 
 # Called when the node enters the scene tree for the first time.
@@ -31,6 +33,10 @@ func _ready() -> void:
 		player.connect("health_changed", _on_player_health_changed)
 	if player and player.has_signal("bomb_used"):
 		player.connect("bomb_used", _on_bomb_used)
+	
+	# Connect to Boris signals if they exist
+	if boris and boris.has_signal("health_changed"):
+		boris.connect("health_changed", _on_boris_health_changed)
 	
 	# Connect to gallery UI signals
 	gallery_ui.connect("game_unpaused", _on_game_unpaused)
@@ -79,9 +85,15 @@ func scene_done() -> void:
 	success_state = true
 	pause_game()
 	%SuccessMenu.visible = true
+	%GalleryUI.visible = true
+	%BackButton.grab_focus()
 
 func _on_bomb_used() -> void:
 	use_bomb()
+
+func _on_boris_health_changed(new_health: int) -> void:
+	# Update Boris health label
+	boris_health_label.text = str(new_health) + "/" + str(boris.max_health)
 
 func _on_game_unpaused() -> void:
 	# Hide the pause UI elements
@@ -115,3 +127,7 @@ func update_ui() -> void:
 	health_label.text = str(health) + "/" + str(max_health)
 	bombs_label.text = str(bombs)
 	keys_label.text = str(keys)
+	
+	# Update Boris health label if Boris exists
+	if boris and boris_health_label:
+		boris_health_label.text = str(boris.health) + "/" + str(boris.max_health)
