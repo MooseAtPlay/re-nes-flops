@@ -10,6 +10,7 @@ extends Node2D
 var game_paused: bool = false
 var game_over: bool = false
 var success_state: bool = false
+var fail_state: bool = false
 var level: int = 1
 
 # Player References
@@ -113,7 +114,13 @@ func unpause_game() -> void:
 	get_tree().paused = false
 
 func _on_player_died() -> void:
-	_on_game_over()
+	print("DEBUG: Player died! Showing fail menu.")
+	# Set fail state and show fail menu
+	fail_state = true
+	pause_game()
+	%FailMenu.visible = true
+	%GalleryUI.visible = true
+	%BackButton.grab_focus()
 
 func _on_game_over() -> void:
 	game_over = true

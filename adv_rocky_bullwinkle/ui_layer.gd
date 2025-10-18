@@ -9,7 +9,7 @@ func _ready() -> void:
 
 # Input handling
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause") and not game_state.success_state:
+	if event.is_action_pressed("pause") and not game_state.success_state and not game_state.fail_state:
 		if game_state.game_paused:
 			# Use the same unpause logic as the button
 			%GalleryUI._on_unpause_button_pressed()
